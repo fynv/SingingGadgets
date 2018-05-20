@@ -9,9 +9,11 @@ inline void Clamp01(float& v)
 	else if (v > 1.0f) v = 1.0f;
 }
 
-void RegulateSource(const float* srcData, unsigned len, Buffer& dstBuf)
+void RegulateSource(const float* srcData, unsigned len, Buffer& dstBuf, int srcStart, int srcEnd)
 {
-	dstBuf.Allocate(len);
+	unsigned uLen = (unsigned)(srcEnd - srcStart);
+	dstBuf.Allocate(uLen);
+
 	float acc = 0.0f;
 	float count = 0.0f;
 	for (unsigned i = 0; i < len; i++)
@@ -23,9 +25,13 @@ void RegulateSource(const float* srcData, unsigned len, Buffer& dstBuf)
 		}
 	}
 	acc = sqrtf(count / acc)*0.3f;
-	for (unsigned i = 0; i < len; i++)
+	for (unsigned i = 0; i < uLen; i++)
 	{
-		dstBuf.m_data[i] = srcData[i] * acc;
+		int j = (int)i + srcStart;
+		float v = 0.0f;
+		if (j>=0 && j<len)
+			v = srcData[j] * acc;
+		dstBuf.m_data[i] = v;
 	}
 }
 

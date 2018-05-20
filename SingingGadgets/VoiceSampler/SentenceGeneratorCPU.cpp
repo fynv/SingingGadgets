@@ -55,11 +55,8 @@ void GenerateSentenceCPU(const SentenceDescriptor* desc, float* outBuf, unsigned
 		const Piece& piece = pieces[i];
 		ParameterVec& parameters = ParameterVecs[i];
 
-		unsigned srcStart = (unsigned)(piece.srcMap[0].srcPos*0.001f*rate);
-		unsigned srcEnd = (unsigned)ceilf(piece.srcMap[piece.srcMap.size() - 1].srcPos*0.001f*rate);
-		unsigned srcLen = piece.src.wav.len;
-
-		if (srcEnd > srcLen) srcEnd = srcLen;
+		int srcStart = (int)(piece.srcMap[0].srcPos*0.001f*rate);
+		int srcEnd = (int)ceilf(piece.srcMap[piece.srcMap.size() - 1].srcPos*0.001f*rate);
 
 		float fPeriodCount = 0.0f;
 		unsigned i_srcMap = 0;
@@ -67,9 +64,9 @@ void GenerateSentenceCPU(const SentenceDescriptor* desc, float* outBuf, unsigned
 
 		Buffer SrcBuffer;
 		SrcBuffer.m_sampleRate = (unsigned)rate;
-		RegulateSource(piece.src.wav.buf, piece.src.wav.len, SrcBuffer);
+		RegulateSource(piece.src.wav.buf, piece.src.wav.len, SrcBuffer,srcStart,srcEnd);
 
-		for (unsigned srcPos = srcStart; srcPos < srcEnd; srcPos++)
+		for (int srcPos = srcStart; srcPos < srcEnd; srcPos++)
 		{
 			float fsrcPos = (float)srcPos / rate*1000.0f;
 			while (i_srcMap + 1 < piece.srcMap.size() && fsrcPos >= piece.srcMap[i_srcMap + 1].srcPos)
@@ -106,7 +103,7 @@ void GenerateSentenceCPU(const SentenceDescriptor* desc, float* outBuf, unsigned
 				{
 					float halfWinlen = 3.0f / srcSampleFreq;
 					Window capture;
-					capture.CreateFromBuffer(SrcBuffer, (float)srcPos, halfWinlen);
+					capture.CreateFromBuffer(SrcBuffer, (float)(srcPos - srcStart), halfWinlen);
 
 					AmpSpectrum capSpec;
 					capSpec.CreateFromWindow(capture);
@@ -148,7 +145,7 @@ void GenerateSentenceCPU(const SentenceDescriptor* desc, float* outBuf, unsigned
 
 				float srcHalfWinWidth = 1.0f / srcSampleFreq;
 				Window srcWin;
-				srcWin.CreateFromBuffer(SrcBuffer, (float)srcPos, srcHalfWinWidth);
+				srcWin.CreateFromBuffer(SrcBuffer, (float)(srcPos - srcStart), srcHalfWinWidth);
 
 				AmpSpectrum harmSpec;
 				harmSpec.CreateFromWindow(srcWin);

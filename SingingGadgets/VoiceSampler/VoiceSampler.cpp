@@ -2,6 +2,9 @@
 #include <WavBuf.h>
 #include "SentenceDescriptor.h"
 #include "SentenceGeneratorCPU.h"
+#ifdef HAVE_CUDA
+#include "SentenceGeneratorCUDA.h"
+#endif
 #include <math.h>
 
 static PyObject* S16ToF32(PyObject *self, PyObject *args)
@@ -172,7 +175,7 @@ static SentenceDescriptor_Deferred CreateSentenceDescriptor(PyObject *input)
 	return sentence;
 }
 
-static PyObject* GenerateSentence(PyObject *self, PyObject *args)
+static PyObject* GenerateSentenceX(PyObject *self, PyObject *args, bool cuda)
 {
 	SentenceDescriptor_Deferred sentence =
 		CreateSentenceDescriptor(PyTuple_GetItem(args, 0));
@@ -215,9 +218,25 @@ static PyObject* GenerateSentence(PyObject *self, PyObject *args)
 	
 	float* ptr;
 	res.GetDataPtrAndLen(ptr, len);	
-	GenerateSentenceCPU(sentence, ptr, (unsigned)len);
+
+#ifdef HAVE_CUDA
+	if (cuda)
+		GenerateSentenceCUDA(sentence, ptr, (unsigned)len);
+	else
+#endif
+		GenerateSentenceCPU(sentence, ptr, (unsigned)len);
 
 	return res.pyWavBuf;
+}
+
+static PyObject* GenerateSentence(PyObject *self, PyObject *args)
+{
+	return GenerateSentenceX(self, args, false);
+}
+
+static PyObject* GenerateSentenceCUDA(PyObject *self, PyObject *args)
+{
+	return GenerateSentenceX(self, args, true);
 }
 
 
@@ -243,6 +262,12 @@ static PyMethodDef s_Methods[] = {
 	{
 		"GenerateSentence",
 		GenerateSentence,
+		METH_VARARGS,
+		""
+	},
+	{
+		"GenerateSentenceCUDA",
+		GenerateSentenceCUDA,
 		METH_VARARGS,
 		""
 	},

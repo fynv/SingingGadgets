@@ -1,5 +1,11 @@
 cmake_minimum_required (VERSION 3.0)
 
+set (USE_CUDA true)
+
+if (USE_CUDA) 
+find_package(CUDA REQUIRED)
+endif ()
+
 find_package(PythonLibs 3 REQUIRED)
 
 set(SOURCES
@@ -45,9 +51,31 @@ add_definitions(-std=c++0x)
 add_compile_options(-fPIC)
 endif()
 
+if (USE_CUDA) 
+
+set(SOURCES ${SOURCES}
+SentenceGeneratorCUDA.cpp
+HNM.cu
+)
+
+set(HEADERS ${HEADERS}
+SentenceGeneratorCUDA.h
+helper_math.h
+VoiceUtil.cuh
+fft.cuh
+)
+
+set (DEFINES ${DEFINES} -D"HAVE_CUDA")
+
+endif ()
+
 include_directories(${INCLUDE_DIR})
 add_definitions(${DEFINES})
+if (USE_CUDA) 
+cuda_add_library (VoiceSampler SHARED ${SOURCES} ${HEADERS})
+else()
 add_library (VoiceSampler SHARED ${SOURCES} ${HEADERS})
+endif()
 if (WIN32) 
 set_target_properties(VoiceSampler PROPERTIES SUFFIX ".pyd")
 else()

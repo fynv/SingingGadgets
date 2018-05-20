@@ -41,7 +41,9 @@ sentence= {
 	'volume_map': [(1.0, 0), (1.0, 1450), (0.0, 1500)]
 }
 
-res=sg.GenerateSentence(sentence)
+#res=sg.GenerateSentence(sentence)
+res=sg.GenerateSentenceCUDA(sentence)
+
 #outData=res['data']
 #maxValue=sg.MaxValueF32Voice(outData)
 #saveWav(res['data'],'out.wav', 1.0/maxValue)

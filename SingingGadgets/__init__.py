@@ -2,7 +2,7 @@ from .UTAUUtils import LoadFrq as LoadFrqUTAU
 from .VoiceSampler import S16ToF32 as S16ToF32Voice
 from .VoiceSampler import F32ToS16 as F32ToS16Voice
 from .VoiceSampler import MaxValueF32 as MaxValueF32Voice
-from .VoiceSampler import GenerateSentence as GenerateSentence
+from .VoiceSampler import GenerateSentence
 
 notVowel = 0
 preVowel = 1

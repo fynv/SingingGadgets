@@ -108,7 +108,7 @@ void TrackBuffer::_writeSamples(unsigned count, const float* samples, unsigned a
 
 void TrackBuffer::WriteBlend(const WavBuffer& wavBuf)
 {
-	assert(noteBuf.m_sampleRate == m_rate);
+	assert(wavBuf.m_sampleRate == m_rate);
 	unsigned count = (unsigned)wavBuf.m_sampleNum;
 	unsigned src_chn = wavBuf.m_channelNum;
 

@@ -4,5 +4,5 @@ add_subdirectory(SingingGadgets)
 add_subdirectory(SingingGadgets/VoiceSampler)
 add_subdirectory(SingingGadgets/TrackBuffer)
 
-add_subdirectory(Test)
+
 

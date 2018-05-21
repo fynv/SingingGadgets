@@ -25,9 +25,9 @@ class OtoMap:
 	def __init__(self):
 		self.oto_map={}
 
-	def AddOtoINIPath(self,path):
+	def AddOtoINIPath(self,path, encoding='mbcs'):
 		otoIniPath=path+'/oto.ini'
-		with open(otoIniPath,'r', encoding='mbcs') as f:
+		with open(otoIniPath,'r', encoding=encoding) as f:
 			while True:
 				line = f.readline()
 				if not line:

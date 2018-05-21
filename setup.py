@@ -6,15 +6,6 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 
-UTAUUtils_Src=[
-	'SingingGadgets/UTAUUtils/FrqData.cpp',
-	'SingingGadgets/UTAUUtils/UTAUUtils.cpp'
-]
-
-module_UTAUUtils=Extension(
-	'SingingGadgets.PyUTAUUtils',
-	sources = UTAUUtils_Src)
-
 VoiceSampler_Src=[
 	'CPPUtils/DSPUtil/complex.cpp',
 	'CPPUtils/DSPUtil/fft.cpp',
@@ -62,7 +53,7 @@ setup(
 	author_email='hyangfeih@gmail.com',
 	keywords='synthesizer PSOLA HNM',
 	packages=['SingingGadgets'],
-	ext_modules=[module_UTAUUtils, module_VoiceSampler, module_TrackBuffer],
+	ext_modules=[module_VoiceSampler, module_TrackBuffer],
 	project_urls={  
         'Source': 'https://github.com/pypa/sampleproject/',
         'Documentation': 'https://scoredraft.org'

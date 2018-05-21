@@ -1,4 +1,25 @@
-from .PyUTAUUtils import *
+# from .PyUTAUUtils import *
+
+import struct
+
+def LoadFrq(filename):
+	with open(filename, 'rb') as f:
+		f.seek(8,0)
+		interval= struct.unpack('i',f.read(4))[0]
+		f.seek(12,0)
+		key = struct.unpack('d', f.read(8))[0]
+		f.seek(36,0)
+		count = struct.unpack('i', f.read(4))[0]
+		f.seek(40,0)
+		data=[]
+		for i in range(count):
+			(freq, dyn) = struct.unpack('dd', f.read(16))
+			data+=[(freq,dyn)]
+		return {
+			"interval": interval,
+			"key": key,
+			"data": data
+		}
 
 class OtoMap:
 	def __init__(self):

@@ -4,8 +4,11 @@
 #include "SentenceGeneratorCPU.h"
 #ifdef HAVE_CUDA
 #include "SentenceGeneratorCUDA.h"
+#include <cuda_runtime.h>
 #endif
 #include <math.h>
+
+static bool s_have_cuda = false;
 
 static PyObject* S16ToF32(PyObject *self, PyObject *args)
 {
@@ -220,7 +223,7 @@ static PyObject* GenerateSentenceX(PyObject *self, PyObject *args, bool cuda)
 	res.GetDataPtrAndLen(ptr, len);	
 
 #ifdef HAVE_CUDA
-	if (cuda)
+	if (cuda && s_have_cuda)
 		GenerateSentenceCUDA(sentence, ptr, (unsigned)len);
 	else
 #endif
@@ -239,6 +242,10 @@ static PyObject* GenerateSentenceCUDA(PyObject *self, PyObject *args)
 	return GenerateSentenceX(self, args, true);
 }
 
+static PyObject* HaveCUDA(PyObject *self, PyObject *args)
+{
+	return s_have_cuda ? Py_True : Py_False;
+}
 
 static PyMethodDef s_Methods[] = {
 	{
@@ -271,6 +278,12 @@ static PyMethodDef s_Methods[] = {
 		METH_VARARGS,
 		""
 	},
+	{
+		"HaveCUDA",
+		HaveCUDA,
+		METH_VARARGS,
+		""
+	},
 	{ NULL, NULL, 0, NULL }
 };
 
@@ -283,7 +296,16 @@ static struct PyModuleDef cModPyDem =
 	s_Methods
 };
 
-PyMODINIT_FUNC PyInit_PyVoiceSampler(void) {
-	
+PyMODINIT_FUNC PyInit_PyVoiceSampler(void) 
+{
+#if HAVE_CUDA
+	int count;
+	cudaGetDeviceCount(&count);
+	if (count > 0 && cudaGetLastError() == 0)
+	{
+		cudaFree(nullptr);
+		if (cudaGetLastError() == 0) s_have_cuda = true;
+	}
+#endif
 	return PyModule_Create(&cModPyDem);
 }

@@ -52,7 +52,7 @@ void ReadFromWav(TrackBuffer& track, const char* fileName)
 	unsigned localBufferSize = track.GetLocalBufferSize();
 
 	WavBuffer buf;
-	buf.m_sampleRate = sampleRate;
+	buf.m_sampleRate = (float)sampleRate;
 	buf.Allocate(chn, localBufferSize);
 
 	while (numSamples > 0)
@@ -62,7 +62,7 @@ void ReadFromWav(TrackBuffer& track, const char* fileName)
 		reader.ReadSamples(buf.m_data, readCount, maxv);
 		buf.m_sampleNum = readCount;
 		track.WriteBlend(buf);
-		track.MoveCursor((float)readCount / track.Rate()*1000.0f);
+		track.MoveCursor((float)readCount / (float)track.Rate()*1000.0f);
 		numSamples -= readCount;
 	}
 }

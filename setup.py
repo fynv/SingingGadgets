@@ -1,10 +1,15 @@
+#!/usr/bin/python3
+
 from setuptools import setup, Extension
 from codecs import open
-from os import path
-here = path.abspath(path.dirname(__file__))
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+import os
+here = os.path.abspath(os.path.dirname(__file__))
+with open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
+extra_compile_args=[]
+if os.name != 'nt':
+	extra_compile_args = ['-std=c++11']
 
 VoiceSampler_Src=[
 	'CPPUtils/DSPUtil/complex.cpp',
@@ -23,7 +28,8 @@ VoiceSampler_IncludeDirs=[
 module_VoiceSampler = Extension(
 	'SingingGadgets.PyVoiceSampler',
 	sources = VoiceSampler_Src,
-	include_dirs = VoiceSampler_IncludeDirs)
+	include_dirs = VoiceSampler_IncludeDirs,
+	extra_compile_args=extra_compile_args)
 
 TrackBuffer_Src=[
 	'SingingGadgets/TrackBuffer/ReadWav.cpp',
@@ -40,7 +46,8 @@ TrackBuffer_IncludeDirs=[
 module_TrackBuffer = Extension(
 	'SingingGadgets.PyTrackBuffer',
 	sources = TrackBuffer_Src,
-	include_dirs = TrackBuffer_IncludeDirs)
+	include_dirs = TrackBuffer_IncludeDirs,
+	extra_compile_args=extra_compile_args)
 
 setup(
 	name = 'SingingGadgets',
@@ -52,7 +59,10 @@ setup(
 	author='Fei Yang',
 	author_email='hyangfeih@gmail.com',
 	keywords='synthesizer PSOLA HNM',
-	packages=['SingingGadgets'],
+	packages=['SingingGadgets','ScoreDraft'],
+	package_data={  
+        'ScoreDraft': ['TTLyricSet.data', 'VCCVLyricSet.data'],
+    },
 	ext_modules=[module_VoiceSampler, module_TrackBuffer],
 	project_urls={  
         'Source': 'https://github.com/pypa/sampleproject/',

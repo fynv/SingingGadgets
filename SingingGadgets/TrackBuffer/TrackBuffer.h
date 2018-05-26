@@ -46,7 +46,7 @@ public:
 	{
 		m_channelNum = channelNum;
 		m_sampleNum = sampleNum;
-		_data.resize(sampleNum);
+		_data.resize(sampleNum * channelNum);
 		m_data = &_data[0];
 	}
 

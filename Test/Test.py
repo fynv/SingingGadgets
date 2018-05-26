@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import wave
 import SingingGadgets as sg
 

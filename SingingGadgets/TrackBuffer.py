@@ -2,6 +2,15 @@ from . import PyTrackBuffer
 
 defaultNumOfChannels=2
 
+def ObjectToId(obj):
+	'''
+	Utility only used intenally. User don't use it.
+	'''
+	if type(obj) is list:
+		return [ObjectToId(sub_obj) for sub_obj in obj]
+	else:
+		return obj.id
+
 class TrackBuffer:
 	'''
 	Basic data structure storing waveform.

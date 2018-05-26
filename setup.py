@@ -51,7 +51,7 @@ module_TrackBuffer = Extension(
 
 setup(
 	name = 'SingingGadgets',
-	version = '0.0.1',
+	version = '0.0.2',
 	description = 'Low level tools for singing synthesis',
 	long_description=long_description,
 	long_description_content_type='text/markdown',  

@@ -65,7 +65,7 @@ setup(
     },
 	ext_modules=[module_VoiceSampler, module_TrackBuffer],
 	project_urls={  
-        'Source': 'https://github.com/pypa/sampleproject/',
+        'Source': 'https://github.com/fynv/SingingGadgets',
         'Documentation': 'https://scoredraft.org'
     },
 )

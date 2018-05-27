@@ -1,23 +1,55 @@
 SingingGadgets
 ================
 
-This is a Python singing synthesis API wrapped at low-level.
+This is an on-going refactor of [ScoreDraft](https://github.com/fynv/ScoreDraft) to address 2 weakness of ScoreDraft when considering it as a Python library:
 
-## Relationship with ScoreDraft
+* PyPi Compatibility 
+* Low-level Interface Exposing.
 
-I've been developing [ScoreDraft](https://github.com/fynv/ScoreDraft) for some time. 
-There are some limitations of ScoreDraft due to its architecture.
-The new project SingingGadgets is to started to address these issues.
+This project is consisted of 2 packages: SingingGadgets and ScoreDraft.
 
-ScoreDraft is basically a plug-in structured C++ project with a Python shell at its outmost layer, using Python merely as its UI. Such architecture is designed for end users to use ScoreDraft directly to author music. 
+* Package SingingGadgets provides low-level interfaces to the singing synthesis engine.
+* Package ScoreDraft provides highevel interfaces similar to the project ScoreDraft, based on package SingingGadgets.
 
-However, some technically user tells me that they need some Python modules as building blocks to build their own singing synthesis systems, and I have to tell them, ScoreDraft is not suitable for such purpose. And now, SingingGadgets is coming to fulfill such requirements.
+For more details on the design considerations, see:
 
-The reason why ScoreDraft is not suitable to be used as a building block is:
+[http://scoredraft.org/index.php/2018/05/27/introducing-singinggadgets/](http://scoredraft.org/index.php/2018/05/27/introducing-singinggadgets/)
 
-1. Low-level wave-form processing are all encapsulated within C++ modules with no direct access from Python
-2. The deployment of ScoreDraft requires an independent folder with C++ modules and data files organized in a specific form, much like a windows application. In other word, it cannot be naturally integrate into the Python ecosystem.
+## Building with CMake
 
-SingingGadgets, on the other hand, is organized as a package of standard Python modules that can be seamlessly integrated to your Python ecosystem. It assumes no relative paths to the application data, and leaves the decision to application layer. In SingingGadgets, I try to use Python provided data structures, such as "bytes" when ever possible, so that it will be possible to communicate with other Python libraries.
+SingingGadgets can be built and deployed to an arbitary local path with CMake.
 
-If it goes smoothly, I will in the end restructure ScoreDraft based on this library, thus exposing both high-level and low-level Python APIs. The existing ScoreDraft will be kept in another branch, because its C++ flavor design might be a little more efficient in speed.
+Prerequisites:
+
+* CMake 3.0+
+* Python3
+* CUDA (Optionally needed by the VoiceSampler module, can be disabled by setting "USE_CUDA" to false in /SingingGadgets/VoiceSampler/CMakeLists.txt)
+
+You can simply run CMake to generate makefiles/project files for your system and build. 
+You can set CMAKE_INSTALL_PREFIX to /Test so that the test scripts can find SingingGadgets.
+
+## PyPi Style Building/Installing
+
+SingingGadgets is compatible with Setuptools. To build and install PyPi locally, try:
+
+	$ python3 setup.py build	
+	$ python3 setup.py install
+
+Prebuilt wheels are also available from https://pypi.org/. Lastest packages are:
+
+	SingingGadgets-0.0.2-cp35-cp35m-manylinux1_x86_64.whl
+	SingingGadgets-0.0.2-cp36-cp36m-manylinux1_x86_64.whl
+	SingingGadgets-0.0.2-cp36-cp36m-win_amd64.whl
+
+If you are using a compatible system, try:
+
+	$ pip3 install SingingGadgets
+
+### limitations
+
+* PyPi style building currently doesn't support CUDA
+* Because SingingGadgets contains a package called exactly ScoreDraft, it will likely conflict with ScoreDraft.py if you are also using the project ScoreDraft (https://github.com/fynv/ScoreDraft), when SingingGadgets is installed to Python's library directory. 
+
+## Usage
+
+Detailed usage introduction will come soon on [http://scoredraft.org](http://scoredraft.org)

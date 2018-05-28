@@ -40,6 +40,7 @@ Prebuilt wheels are also available from https://pypi.org/. Lastest packages are:
 	SingingGadgets-0.0.2-cp35-cp35m-manylinux1_x86_64.whl
 	SingingGadgets-0.0.2-cp36-cp36m-manylinux1_x86_64.whl
 	SingingGadgets-0.0.2-cp36-cp36m-win_amd64.whl
+	SingingGadgets-0.0.2-cp36-cp36m-macosx_10_9_x86_64.whl
 
 If you are using a compatible system, try:
 

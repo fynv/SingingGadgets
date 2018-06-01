@@ -14,6 +14,7 @@ set(SOURCES
 VoiceSampler.cpp
 SentenceGeneratorGeneral.cpp
 SentenceGeneratorCPU.cpp
+FrequencyDetection.cpp
 )
 
 set(HEADERS 
@@ -26,6 +27,7 @@ VoiceUtil.h
 SentenceDescriptor.h
 SentenceGeneratorGeneral.h
 SentenceGeneratorCPU.h
+FrequencyDetection.h
 )
 
 

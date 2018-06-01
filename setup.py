@@ -16,7 +16,8 @@ VoiceSampler_Src=[
 	'CPPUtils/DSPUtil/fft.cpp',
 	'SingingGadgets/VoiceSampler/VoiceSampler.cpp',
 	'SingingGadgets/VoiceSampler/SentenceGeneratorGeneral.cpp',
-	'SingingGadgets/VoiceSampler/SentenceGeneratorCPU.cpp'
+	'SingingGadgets/VoiceSampler/SentenceGeneratorCPU.cpp',
+	'SingingGadgets/VoiceSampler/FrequencyDetection.cpp'
 ]
 
 VoiceSampler_IncludeDirs=[

@@ -8,6 +8,10 @@
 #endif
 #include <math.h>
 
+#include "VoiceUtil.h"
+#include "FrequencyDetection.h"
+using namespace VoiceUtil;
+
 static bool s_have_cuda = false;
 
 static PyObject* S16ToF32(PyObject *self, PyObject *args)
@@ -247,6 +251,81 @@ static PyObject* HaveCUDA(PyObject *self, PyObject *args)
 	return s_have_cuda ? Py_True : Py_False;
 }
 
+void DetectFreqs(const Buffer& buf, std::vector<float>& frequencies, std::vector<float>& dynamics, unsigned step)
+{
+	unsigned halfWinLen = 1024;
+	float* temp = new float[halfWinLen * 2];
+
+	for (unsigned center = 0; center < buf.m_data.size(); center += step)
+	{
+		Window win;
+		win.CreateFromBuffer(buf, (float)center, (float)halfWinLen);
+
+		for (int i = -(int)halfWinLen; i < (int)halfWinLen; i++)
+			temp[i + halfWinLen] = win.GetSample(i);
+
+		float freq;
+		float dyn;
+		fetchFrequency(halfWinLen * 2, temp, buf.m_sampleRate, freq, dyn);
+
+		frequencies.push_back(freq);
+		dynamics.push_back(dyn);
+	}
+
+	delete[] temp;
+
+}
+
+static PyObject* DetectFrq(PyObject *self, PyObject *args)
+{
+	char* p;
+
+	PyObject* o_f32bytes = PyTuple_GetItem(args, 0);
+	ssize_t len;
+	PyBytes_AsStringAndSize(o_f32bytes, &p, &len);
+	len /= sizeof(float);
+	float* f32bytes = (float*)p;
+
+	int interval = (int)PyLong_AsLong(PyTuple_GetItem(args, 1));
+
+	Buffer buf;
+	buf.m_sampleRate = 44100;
+	buf.Allocate(len);
+	memcpy(buf.m_data.data(), f32bytes, sizeof(float)*len);
+
+	std::vector<float> frequencies;
+	std::vector<float> dynamics;
+	DetectFreqs(buf, frequencies, dynamics, interval);
+
+	float ave = 0.0f;
+	float count = 0.0f;
+	for (unsigned i = 0; i < (unsigned)frequencies.size(); i++)
+	{
+		if (frequencies[i] > 55.0f)
+		{
+			count += 1.0f;
+			ave += frequencies[i];
+		}
+	}
+	ave = ave / count;
+
+	PyObject *ret = PyDict_New();
+	PyDict_SetItemString(ret, "interval", PyLong_FromLong((long)interval));
+	PyDict_SetItemString(ret, "key", PyFloat_FromDouble((double)ave));
+	PyObject* data = PyList_New(frequencies.size());
+	for (unsigned i = 0; i < (unsigned)frequencies.size(); i++)
+	{
+		PyObject* tuple = PyTuple_New(2);
+		PyTuple_SetItem(tuple, 0, PyFloat_FromDouble((double)frequencies[i]));
+		PyTuple_SetItem(tuple, 1, PyFloat_FromDouble((double)dynamics[i]));
+		PyList_SetItem(data, i, tuple);
+	}
+
+	PyDict_SetItemString(ret, "data", data);
+
+	return ret;
+}
+
 static PyMethodDef s_Methods[] = {
 	{
 		"S16ToF32",
@@ -281,6 +360,12 @@ static PyMethodDef s_Methods[] = {
 	{
 		"HaveCUDA",
 		HaveCUDA,
+		METH_VARARGS,
+		""
+	},
+	{
+		"DetectFrq",
+		DetectFrq,
 		METH_VARARGS,
 		""
 	},

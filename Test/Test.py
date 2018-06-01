@@ -18,9 +18,13 @@ def saveWav(wavF32, file, amp=1.0):
 		wavFile.setnframes(len(wavS16)//2)
 		wavFile.writeframes(wavS16)
 
+wav = loadWav('fa.wav')
+frq = sg.LoadFrqUTAU('fa_wav.frq')
+#frq =  sg.DetectFrqVoice(wav)
+
 src={
-	'wav': loadWav('fa.wav'),
-	'frq': sg.LoadFrqUTAU('fa_wav.frq')
+	'wav': wav,
+	'frq': frq
 }
 
 sentence= {

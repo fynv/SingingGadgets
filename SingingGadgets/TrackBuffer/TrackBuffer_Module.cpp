@@ -75,6 +75,7 @@ static void ConvertWavBuf(const PyWavBuf& in, WavBuffer& out)
 	out.m_sampleRate = in.GetSampleRate();
 	out.m_channelNum = in.GetNumChannels();
 	in.GetDataPtrAndLen(out.m_data, *(ssize_t*)(&out.m_sampleNum));
+	out.m_sampleNum /= out.m_channelNum;
 	out.m_alignPos = in.GetAlignPos();
 	out.m_volume = in.GetVolume();
 	out.m_pan = in.GetPan();

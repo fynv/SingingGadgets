@@ -7,10 +7,10 @@ def loadWav(file):
 	wavS16=bytes()
 	with wave.open(file, mode='rb') as wavFile:
 		wavS16=wavFile.readframes(wavFile.getnframes())
-	return sg.S16ToF32Voice(wavS16)
+	return sg.S16ToF32(wavS16)
 
 def saveWav(wavF32, file, amp=1.0):
-	wavS16=sg.F32ToS16Voice(wavF32, amp)
+	wavS16=sg.F32ToS16(wavF32, amp)
 	with wave.open(file, mode='wb') as wavFile:
 		wavFile.setnchannels(1)
 		wavFile.setsampwidth(2)
@@ -51,7 +51,7 @@ sentence= {
 res=sg.GenerateSentenceCUDA(sentence)
 
 #outData=res['data']
-#maxValue=sg.MaxValueF32Voice(outData)
+#maxValue=sg.MaxValueF32(outData)
 #saveWav(res['data'],'out.wav', 1.0/maxValue)
 
 track = sg.TrackBuffer(1)

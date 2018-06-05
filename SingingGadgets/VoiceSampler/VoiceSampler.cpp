@@ -14,70 +14,6 @@ using namespace VoiceUtil;
 
 static bool s_have_cuda = false;
 
-static PyObject* S16ToF32(PyObject *self, PyObject *args)
-{
-	char* p;
-
-	PyObject* o_s16bytes = PyTuple_GetItem(args, 0);
-	ssize_t len;
-	PyBytes_AsStringAndSize(o_s16bytes, &p, &len);
-	len /= sizeof(short);
-	short* s16bytes = (short*)p;
-
-	PyObject* o_f32bytes = PyBytes_FromStringAndSize(nullptr, len*sizeof(float));
-	PyBytes_AsStringAndSize(o_f32bytes, &p, &len);
-	len /= sizeof(float);
-	float* f32bytes = (float*)p;
-
-	for (ssize_t i = 0; i < len; i++)
-		f32bytes[i] = (float)s16bytes[i] / 32767.0f;
-
-	return o_f32bytes;
-}
-
-static PyObject* F32ToS16(PyObject *self, PyObject *args)
-{
-	char* p;
-
-	PyObject* o_f32bytes = PyTuple_GetItem(args, 0);
-	ssize_t len;
-	PyBytes_AsStringAndSize(o_f32bytes, &p, &len);
-	len /= sizeof(float);
-	float* f32bytes = (float*)p;
-
-	float amplitude = (float)PyFloat_AsDouble(PyTuple_GetItem(args, 1));
-
-	PyObject* o_s16bytes = PyBytes_FromStringAndSize(nullptr, len*sizeof(short));
-	PyBytes_AsStringAndSize(o_s16bytes, &p, &len);
-	len /= sizeof(short);
-	short* s16bytes = (short*)p;
-
-	for (ssize_t i = 0; i < len; i++)
-		s16bytes[i] = (short)(f32bytes[i] * 32767.0f*amplitude + 0.5f);
-
-	return o_s16bytes;
-}
-
-static PyObject* MaxValueF32(PyObject *self, PyObject *args)
-{
-	char* p;
-
-	PyObject* o_f32bytes = PyTuple_GetItem(args, 0);
-	ssize_t len;
-	PyBytes_AsStringAndSize(o_f32bytes, &p, &len);
-	len /= sizeof(float);
-	float* f32bytes = (float*)p;
-
-	float maxV = 0.0f;
-	for (ssize_t i = 0; i < len; i++)
-	{
-		float v = fabsf(f32bytes[i]);
-		if (v > maxV) maxV = v;
-	}
-
-	return PyFloat_FromDouble((double)maxV);
-}
-
 static SentenceDescriptor_Deferred CreateSentenceDescriptor(PyObject *input)
 {
 	SentenceDescriptor_Deferred sentence;
@@ -327,24 +263,6 @@ static PyObject* DetectFrq(PyObject *self, PyObject *args)
 }
 
 static PyMethodDef s_Methods[] = {
-	{
-		"S16ToF32",
-		S16ToF32,
-		METH_VARARGS,
-		""
-	},
-	{
-		"F32ToS16",
-		F32ToS16,
-		METH_VARARGS,
-		""
-	},
-	{
-		"MaxValueF32",
-		MaxValueF32,
-		METH_VARARGS,
-		""
-	},
 	{
 		"GenerateSentence",
 		GenerateSentence,

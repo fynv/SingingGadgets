@@ -7,6 +7,9 @@ from .TsuroVCVConverter import TsuroVCVConverter
 from .TTEnglishConverter import TTEnglishConverter
 from .VCCVEnglishConverter import VCCVEnglishConverter
 
+from .SF2Instrument import ListPresets as ListPresetsSF2
+from .SF2Instrument import SF2Instrument
+
 import os
 import numbers
 

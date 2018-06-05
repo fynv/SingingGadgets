@@ -12,6 +12,9 @@ TTEnglishConverter.py
 VCCVEnglishConverter.py
 TTLyricSet.data
 VCCVLyricSet.data
+
+InstrumentShell.py
+SF2Instrument.py
 )
 
 install(FILES ${PYTHON} DESTINATION ScoreDraft)

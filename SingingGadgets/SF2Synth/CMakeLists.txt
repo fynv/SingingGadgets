@@ -3,12 +3,12 @@ cmake_minimum_required (VERSION 3.0)
 find_package(PythonLibs 3 REQUIRED)
 
 set(SOURCES
-UTAUUtils.cpp
-FrqData.cpp
+Synth.cpp
+SF2Synth_Module.cpp
 )
 
 set(HEADERS 
-FrqData.h
+Synth.h
 )
 
 
@@ -34,17 +34,19 @@ endif()
 
 include_directories(${INCLUDE_DIR})
 add_definitions(${DEFINES})
-add_library (UTAUUtils SHARED ${SOURCES} ${HEADERS})
+add_library (SF2Synth SHARED ${SOURCES} ${HEADERS})
 if (WIN32) 
-set_target_properties(UTAUUtils PROPERTIES SUFFIX ".pyd")
+set_target_properties(SF2Synth PROPERTIES SUFFIX ".pyd")
 else()
-set_target_properties(UTAUUtils PROPERTIES SUFFIX ".so")
+set_target_properties(SF2Synth PROPERTIES SUFFIX ".so")
 endif()
-set_target_properties(UTAUUtils PROPERTIES PREFIX "Py")
+set_target_properties(SF2Synth PROPERTIES PREFIX "Py")
 
-target_link_libraries(UTAUUtils ${LINK_LIBS})
+target_link_libraries(SF2Synth ${LINK_LIBS})
 
-install(TARGETS UTAUUtils 
+install(TARGETS SF2Synth 
 		RUNTIME DESTINATION SingingGadgets)
+
+
 
 

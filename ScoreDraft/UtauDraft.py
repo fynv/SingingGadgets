@@ -8,7 +8,7 @@ def loadWav(file):
 	wavS16=bytes()
 	with wave.open(file, mode='rb') as wavFile:
 		wavS16=wavFile.readframes(wavFile.getnframes())
-	return sg.S16ToF32Voice(wavS16)
+	return sg.S16ToF32(wavS16)
 
 def GetVoiceBank(path):
 	if not (path in VoiceBanks):

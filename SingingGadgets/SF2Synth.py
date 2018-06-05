@@ -253,9 +253,9 @@ def SynthVoice(inputSamples, numSamples, voice, outputmode, samplerate):
 
 		if dynamicLowpass:
 			fres = tmpInitialFilterFc + voice['modlfo']['level'] * tmpModLfoToFilterFc + voice['modenv']['level'] * tmpModEnvToFilterFc
-			tmpLowpass['active'] = fres <= 13500.0
-			if tmpLowpass['active']:
-				VoiceLowpassSetup(tmpLowpass, Cents2Hertz(fres)/tmpSampleRate)
+			tmpLowPass['active'] = fres <= 13500.0
+			if tmpLowPass['active']:
+				VoiceLowpassSetup(tmpLowPass, Cents2Hertz(fres)/tmpSampleRate)
 
 		if dynamicPitchRatio:
 			pitchRatio = TimeCents2Sec(voice['pitchInputTimecents'] + (voice['modlfo']['level']*tmpModLfoToPitch +voice['viblfo']['level']*tmpVibLfoToPitch + voice['modenv']['level']*tmpModEnvToPitch))*  voice['pitchOutputFactor']

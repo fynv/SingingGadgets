@@ -8,6 +8,7 @@ from .UTAUUtils import LoadPrefixMap as LoadPrefixMapUTAU
 from .UTAUUtils import LookUpPrefixMap as LookUpPrefixMapUTAU
 from .UTAUUtils import VoiceBank as VoiceBankUTAU
 
+from .TrackBuffer import setDefaultNumberOfChannels
 from .TrackBuffer import TrackBuffer
 from .TrackBuffer import MixTrackBufferList
 from .TrackBuffer import WriteTrackBufferToWav

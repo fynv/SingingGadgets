@@ -1,7 +1,5 @@
 from . import PyTrackBuffer
 
-defaultNumOfChannels=2
-
 def ObjectToId(obj):
 	'''
 	Utility only used intenally. User don't use it.
@@ -10,6 +8,15 @@ def ObjectToId(obj):
 		return [ObjectToId(sub_obj) for sub_obj in obj]
 	else:
 		return obj.id
+
+defaultNumOfChannels=2
+def setDefaultNumberOfChannels(defChn):
+	if defChn<1:
+		defChn=1
+	elif defChn>2:
+		defChn=2
+	global defaultNumOfChannels
+	defaultNumOfChannels=defChn
 
 class TrackBuffer:
 	'''

@@ -119,3 +119,15 @@ class InstrumentShell:
 					engine.tune(item)
 
 
+class InstrumentBase:
+	def __init__(self):
+		self.shell=InstrumentShell()
+	def play(self, buf, seq, tempo, refFreq):
+		self.shell.PlaySequence(self.engine, buf, seq, tempo, refFreq)
+	def tune(self,cmd):
+		if not self.shell.tune(cmd):
+			self.engine.tune(cmd)
+	def setNoteVolume(self,volume):
+		self.shell.volume=volume
+	def setNotePan(self,pan):
+		self.shell.pan=pan

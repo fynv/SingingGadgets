@@ -1,6 +1,6 @@
 import wave
 import SingingGadgets as sg
-from . import SingerShell as ss
+from .SingerBase import SingerBase
 
 VoiceBanks={}
 
@@ -267,33 +267,17 @@ class Engine:
 		else:
 			return sg.GenerateSentence(sentence)
 
-class UtauDraft:
+class UtauDraft(SingerBase):
 	def __init__(self, voiceBank, useCUDA=True):
-		self.shell=ss.SingerShell()
+		SingerBase.__init__(self)
 		self.engine=Engine(voiceBank)
 		self.engine.useCUDA=useCUDA
-	def sing(self, buf, seq, tempo=80, refFreq=264.0):
-		self.shell.SingSequence(self.engine, buf, seq, tempo,refFreq)
-	def tune(self,cmd):
-		if not self.shell.tune(cmd):
-			self.engine.tune(cmd)
 	def setLyricConverter(self, lyricConverter):
 		self.engine.lyricConverter=lyricConverter
 	def setPieceMapper(self, pieceMapper):
 		self.engine.pieceMapper=pieceMapper
-
-	def setDefaultLyric(self,defaultLyric):
-		self.shell.default_lyric=defaultLyric
-
-	def setNoteVolume(self,volume):
-		self.shell.volume=volume
-
-	def setNotePan(self,pan):
-		self.shell.pan=pan
-
 	def setUsePrefixMap(self,usePrefixMap):
 		self.engine.usePrefixMap=usePrefixMap
-
 	def setCZMode(self):
 		self.engine.pieceMapper= CZPieceMapper
 

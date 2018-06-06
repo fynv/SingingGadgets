@@ -119,7 +119,7 @@ class InstrumentShell:
 					engine.tune(item)
 
 
-class InstrumentBase:
+class Instrument:
 	def __init__(self):
 		self.shell=InstrumentShell()
 	def play(self, buf, seq, tempo, refFreq):

@@ -1,7 +1,7 @@
 
 set(PYTHON
 __init__.py
-SingerBase.py
+Singer.py
 UtauDraft.py
 Notes.py
 CVVCChineseConverter.py
@@ -13,7 +13,7 @@ VCCVEnglishConverter.py
 TTLyricSet.data
 VCCVLyricSet.data
 
-InstrumentBase.py
+Instrument.py
 SF2Instrument.py
 )
 

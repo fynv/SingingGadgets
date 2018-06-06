@@ -1,6 +1,6 @@
 import math
 import SingingGadgets as sg
-from .InstrumentBase import InstrumentBase
+from .Instrument import Instrument
 
 SF2s={}
 
@@ -47,9 +47,9 @@ class Engine:
 		}		
 
 
-class SF2Instrument(InstrumentBase):
+class SF2Instrument(Instrument):
 	def __init__(self, fn, preset_index, sampleRate=44100, global_gain_db=0.0):
-		InstrumentBase.__init__(self)
+		Instrument.__init__(self)
 		sf2 = GetSF2(fn)
 		self.engine= Engine(sf2[0][preset_index], sf2[1], sampleRate, global_gain_db)
 

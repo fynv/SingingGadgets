@@ -1,6 +1,6 @@
 import wave
 import SingingGadgets as sg
-from .SingerBase import SingerBase
+from .Singer import Singer
 
 VoiceBanks={}
 
@@ -267,9 +267,9 @@ class Engine:
 		else:
 			return sg.GenerateSentence(sentence)
 
-class UtauDraft(SingerBase):
+class UtauDraft(Singer):
 	def __init__(self, voiceBank, useCUDA=True):
-		SingerBase.__init__(self)
+		Singer.__init__(self)
 		self.engine=Engine(voiceBank)
 		self.engine.useCUDA=useCUDA
 	def setLyricConverter(self, lyricConverter):

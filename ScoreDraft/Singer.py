@@ -208,7 +208,7 @@ class SingerShell:
 					engine.tune(item)
 
 
-class SingerBase:
+class Singer:
 	def __init__(self):
 		self.shell=SingerShell()
 	def sing(self, buf, seq, tempo=80, refFreq=264.0):

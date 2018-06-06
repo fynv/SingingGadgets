@@ -99,8 +99,8 @@ track2 = sg.TrackBuffer()
 
 piano = sd.SF2Instrument('florestan-subset.sf2', 0)
 
-piano.play(track1, seq1, 120, 264.0 *1.25)
-piano.play(track2, seq2, 120, 264.0 *1.25)
+piano.play(track1, seq1, 120, 261.626 * (2**(1/3)))
+piano.play(track2, seq2, 120, 261.626 * (2**(1/3)))
 
 track_mix = sg.TrackBuffer()
 

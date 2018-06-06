@@ -14,6 +14,20 @@ using namespace VoiceUtil;
 
 static bool s_have_cuda = false;
 
+static bool HaveCUDA()
+{
+#if HAVE_CUDA
+	int count;
+	cudaGetDeviceCount(&count);
+	if (count > 0 && cudaGetLastError() == 0)
+	{
+		cudaFree(nullptr);
+		if (cudaGetLastError() == 0) s_have_cuda = true;
+	}
+#endif
+	return s_have_cuda;
+}
+
 static SentenceDescriptor_Deferred CreateSentenceDescriptor(PyObject *input)
 {
 	SentenceDescriptor_Deferred sentence;
@@ -163,7 +177,7 @@ static PyObject* GenerateSentenceX(PyObject *self, PyObject *args, bool cuda)
 	res.GetDataPtrAndLen(ptr, len);	
 
 #ifdef HAVE_CUDA
-	if (cuda && s_have_cuda)
+	if (cuda && HaveCUDA())
 		GenerateSentenceCUDA(sentence, ptr, (unsigned)len);
 	else
 #endif
@@ -184,7 +198,7 @@ static PyObject* GenerateSentenceCUDA(PyObject *self, PyObject *args)
 
 static PyObject* HaveCUDA(PyObject *self, PyObject *args)
 {
-	return s_have_cuda ? Py_True : Py_False;
+	return HaveCUDA() ? Py_True : Py_False;
 }
 
 void DetectFreqs(const Buffer& buf, std::vector<float>& frequencies, std::vector<float>& dynamics, unsigned step)
@@ -301,14 +315,5 @@ static struct PyModuleDef cModPyDem =
 
 PyMODINIT_FUNC PyInit_PyVoiceSampler(void) 
 {
-#if HAVE_CUDA
-	int count;
-	cudaGetDeviceCount(&count);
-	if (count > 0 && cudaGetLastError() == 0)
-	{
-		cudaFree(nullptr);
-		if (cudaGetLastError() == 0) s_have_cuda = true;
-	}
-#endif
 	return PyModule_Create(&cModPyDem);
 }

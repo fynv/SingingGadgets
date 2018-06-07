@@ -211,7 +211,7 @@ class SingerShell:
 class Singer:
 	def __init__(self):
 		self.shell=SingerShell()
-	def sing(self, buf, seq, tempo=80, refFreq=264.0):
+	def sing(self, buf, seq, tempo=80, refFreq=261.626):
 		self.shell.SingSequence(self.engine, buf, seq, tempo,refFreq)
 	def tune(self,cmd):
 		if not self.shell.tune(cmd):

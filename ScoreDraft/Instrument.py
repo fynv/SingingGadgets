@@ -123,7 +123,7 @@ class Instrument:
 	def __init__(self):
 		self.shell=InstrumentShell()
 	def play(self, buf, seq, tempo, refFreq):
-		self.shell.PlaySequence(self.engine, buf, seq, tempo, refFreq)
+		self.shell.PlaySequence(self.engine, buf, seq, tempo=80, refFreq=261.626)
 	def tune(self,cmd):
 		if not self.shell.tune(cmd):
 			self.engine.tune(cmd)

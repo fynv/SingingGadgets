@@ -1,28 +1,5 @@
-from .UtauDraft import GetVoiceBank as GetVoiceBankUTAU
-from .UtauDraft import UtauDraft
-from .CVVCChineseConverter import CVVCChineseConverter
-from .XiaYYConverter import XiaYYConverter
-from .JPVCVConverter import JPVCVConverter
-from .TsuroVCVConverter import TsuroVCVConverter
-from .TTEnglishConverter import TTEnglishConverter
-from .VCCVEnglishConverter import VCCVEnglishConverter
-
-from .SF2Instrument import ListPresets as ListPresetsSF2
-from .SF2Instrument import SF2Instrument
-
 import os
 import numbers
-
-UTAU_VB_ROOT='UTAUVoice'
-UTAU_VB_SUFFIX='_UTAU'
-if os.path.isdir(UTAU_VB_ROOT):
-	for item in os.listdir(UTAU_VB_ROOT):
-		if os.path.isdir(UTAU_VB_ROOT+'/'+item):
-			definition="""
-def """+item+UTAU_VB_SUFFIX+"""(useCuda=True):
-	return UtauDraft('"""+UTAU_VB_ROOT+"""/"""+item+"""',useCuda)
-"""
-			exec(definition)
 
 def isNumber(x):
 	return isinstance(x, numbers.Number)
@@ -53,4 +30,31 @@ def TellDuration(seq):
 			elif isNumber(_item): # note
 				duration += item[1]
 	return duration
+
+from .Instrument import Instrument
+# from .Percussion import Percussion
+from .Singer import Singer
+
+from .UtauDraft import GetVoiceBank as GetVoiceBankUTAU
+from .UtauDraft import UtauDraft
+from .CVVCChineseConverter import CVVCChineseConverter
+from .XiaYYConverter import XiaYYConverter
+from .JPVCVConverter import JPVCVConverter
+from .TsuroVCVConverter import TsuroVCVConverter
+from .TTEnglishConverter import TTEnglishConverter
+from .VCCVEnglishConverter import VCCVEnglishConverter
+
+UTAU_VB_ROOT='UTAUVoice'
+UTAU_VB_SUFFIX='_UTAU'
+if os.path.isdir(UTAU_VB_ROOT):
+	for item in os.listdir(UTAU_VB_ROOT):
+		if os.path.isdir(UTAU_VB_ROOT+'/'+item):
+			definition="""
+def """+item+UTAU_VB_SUFFIX+"""(useCuda=True):
+	return UtauDraft('"""+UTAU_VB_ROOT+"""/"""+item+"""',useCuda)
+"""
+			exec(definition)
+
+from .SF2Instrument import ListPresets as ListPresetsSF2
+from .SF2Instrument import SF2Instrument
 

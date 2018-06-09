@@ -15,6 +15,7 @@ VCCVLyricSet.data
 
 Instrument.py
 SF2Instrument.py
+SimpleInstruments.py
 )
 
 install(FILES ${PYTHON} DESTINATION ScoreDraft)

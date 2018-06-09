@@ -7,6 +7,7 @@ TrackBuffer.py
 SF2.py
 SF2Presets.py
 SF2Synth.py
+SimpleInstruments.py
 )
 
 install(FILES ${PYTHON} DESTINATION SingingGadgets)

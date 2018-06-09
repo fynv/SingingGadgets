@@ -42,3 +42,9 @@ from .SF2 import LoadSF2
 from .SF2Presets import LoadPresets as LoadPresetsSF2
 from .SF2Synth import SynthNote as SynthNoteSF2
 
+from .SimpleInstruments import GeneratePureSin
+from .SimpleInstruments import GenerateSquare
+from .SimpleInstruments import GenerateTriangle
+from .SimpleInstruments import GenerateSawtooth
+from .SimpleInstruments import GenerateNaivePiano
+from .SimpleInstruments import GenerateBottleBlow

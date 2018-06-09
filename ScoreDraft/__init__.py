@@ -58,3 +58,9 @@ def """+item+UTAU_VB_SUFFIX+"""(useCuda=True):
 from .SF2Instrument import ListPresets as ListPresetsSF2
 from .SF2Instrument import SF2Instrument
 
+from .SimpleInstruments import PureSin
+from .SimpleInstruments import Square
+from .SimpleInstruments import Triangle
+from .SimpleInstruments import Sawtooth
+from .SimpleInstruments import NaivePiano
+from .SimpleInstruments import BottleBlow

@@ -26,7 +26,7 @@ class InstrumentShell:
 		return False
 
 	def EnginePlayNote(self, engine, buf, freq, fduration):
-		wavBuf=engine.generateWave(freq,fduration)
+		wavBuf=engine.generateWave(freq,fduration, buf.getSampleRate())
 		if wavBuf!=None:
 			wavBuf['volume']=self.volume
 			wavBuf['pan']=self.pan
@@ -122,8 +122,8 @@ class InstrumentShell:
 class Instrument:
 	def __init__(self):
 		self.shell=InstrumentShell()
-	def play(self, buf, seq, tempo, refFreq):
-		self.shell.PlaySequence(self.engine, buf, seq, tempo=80, refFreq=261.626)
+	def play(self, buf, seq, tempo=80.0, refFreq=261.626):
+		self.shell.PlaySequence(self.engine, buf, seq, tempo, refFreq)
 	def tune(self,cmd):
 		if not self.shell.tune(cmd):
 			self.engine.tune(cmd)

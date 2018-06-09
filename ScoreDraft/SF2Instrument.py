@@ -19,11 +19,10 @@ def ListPresets(fn):
 		print ('%d : %s bank=%d number=%d' % (i, preset['presetName'], preset['bank'], preset['preset']))
 
 class Engine:
-	def __init__(self, preset, fontSamples, sampleRate, global_gain_db):
+	def __init__(self, preset, fontSamples):
 		self.preset = preset
 		self.fontSamples = fontSamples
-		self.sampleRate = sampleRate
-		self.global_gain_db = global_gain_db
+		self.global_gain_db = 0.0
 		self.vel = 1.0
 
 	def tune(self, cmd):
@@ -35,12 +34,12 @@ class Engine:
 				return True
 		return False
 
-	def generateWave(self, freq, fduration):
+	def generateWave(self, freq, fduration, sampleRate):
 		key = math.log(freq / 261.626)/math.log(2)*12.0+60.0
-		num_samples = fduration * self.sampleRate * 0.001
-		(actual_num_samples, F32Samples) = sg.SynthNoteSF2(self.fontSamples, self.preset, key, self.vel, num_samples, outputmode = sg.STEREO_INTERLEAVED, samplerate = self.sampleRate, global_gain_db = self.global_gain_db)
+		num_samples = fduration * sampleRate * 0.001
+		(actual_num_samples, F32Samples) = sg.SynthNoteSF2(self.fontSamples, self.preset, key, self.vel, num_samples, sg.STEREO_INTERLEAVED, sampleRate, self.global_gain_db)
 		return {
-			'sample_rate': self.sampleRate,
+			'sample_rate': sampleRate,
 			'num_channels': 2,
 			'data': F32Samples,
 			'align_pos': 0
@@ -48,8 +47,8 @@ class Engine:
 
 
 class SF2Instrument(Instrument):
-	def __init__(self, fn, preset_index, sampleRate=44100, global_gain_db=0.0):
+	def __init__(self, fn, preset_index):
 		Instrument.__init__(self)
 		sf2 = GetSF2(fn)
-		self.engine= Engine(sf2[0][preset_index], sf2[1], sampleRate, global_gain_db)
+		self.engine= Engine(sf2[0][preset_index], sf2[1])
 

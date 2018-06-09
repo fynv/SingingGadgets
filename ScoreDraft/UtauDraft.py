@@ -169,7 +169,7 @@ class Engine:
 				lyricList+=[piece]
 		return lyricList
 
-	def generateWave(self, syllableList):
+	def generateWave(self, syllableList, sampleRate):
 		# print(syllableList)
 		syllableLyricList=[]
 		totalDuration=0

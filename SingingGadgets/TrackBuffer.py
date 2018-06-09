@@ -38,6 +38,9 @@ class TrackBuffer:
 	def __del__(self):
 		PyTrackBuffer.DelTrackBuffer(self.id)
 
+	def getSampleRate(self):
+		return 44100 # currently we always use a sample rate 44100.0
+
 	def setVolume(self,volume):
 		'''
 		Set the volume of the track. This value is used as a weight when mixing tracks.

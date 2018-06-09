@@ -30,7 +30,7 @@ class SingerShell:
 		return False
 
 	def EngineSingSyllables(self,engine, buf, syllableList,totalDuration):
-		wavBuf=engine.generateWave(syllableList)
+		wavBuf=engine.generateWave(syllableList, buf.getSampleRate())
 		if wavBuf!=None:
 			wavBuf['volume']=self.volume
 			wavBuf['pan']=self.pan

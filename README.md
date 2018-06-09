@@ -49,7 +49,7 @@ If you are using a compatible system, try:
 ### limitations
 
 * PyPi style building currently doesn't support CUDA
-* Because SingingGadgets contains a package called exactly ScoreDraft, it will likely conflict with ScoreDraft.py if you are also using the project ScoreDraft (https://github.com/fynv/ScoreDraft), when SingingGadgets is installed to Python's library directory. 
+* Because SingingGadgets contains a package called exactly ScoreDraft, it will likely conflict with the one in project ScoreDraft (https://github.com/fynv/ScoreDraft). If you are using both, please consider using the CMake building approach and deploy neither of them into your Python installation directory.
 
 ## Usage
 

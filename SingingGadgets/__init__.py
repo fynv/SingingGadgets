@@ -48,3 +48,8 @@ from .SimpleInstruments import GenerateTriangle
 from .SimpleInstruments import GenerateSawtooth
 from .SimpleInstruments import GenerateNaivePiano
 from .SimpleInstruments import GenerateBottleBlow
+
+from .BasicSamplers import DetectBaseFreq
+from .BasicSamplers import InstrumentSingleSample
+from .BasicSamplers import InstrumentMultiSample
+from .BasicSamplers import PercussionSample

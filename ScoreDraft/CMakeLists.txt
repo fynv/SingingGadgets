@@ -1,6 +1,7 @@
 
 set(PYTHON
 __init__.py
+
 Singer.py
 UtauDraft.py
 Notes.py
@@ -16,6 +17,12 @@ VCCVLyricSet.data
 Instrument.py
 SF2Instrument.py
 SimpleInstruments.py
+InstrumentSampler.py
+
+Percussion.py
+PercussionSampler.py
+
+Catalog.py
 )
 
 install(FILES ${PYTHON} DESTINATION ScoreDraft)

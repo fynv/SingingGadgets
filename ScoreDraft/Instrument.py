@@ -44,7 +44,7 @@ class InstrumentShell:
 				buf.moveCursor(-fduration)
 			return
 		freq = refFreq*note[0]
-		self.EnginePlayNote (self, engine, buf, freq, fduration)
+		self.EnginePlayNote (engine, buf, freq, fduration)
 
 	def PlayNoteB(self, engine, buf, note, tempo, refFreq):
 		fduration=abs(note[1]*60000)/(tempo*48)

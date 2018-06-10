@@ -1,6 +1,8 @@
 import math
 import SingingGadgets as sg
 from .Instrument import Instrument
+from .Catalog import Catalog
+Catalog['Engines'] += ['SF2Instrument - Instrument']
 
 SF2s={}
 

@@ -79,6 +79,28 @@ module_SimpleInstruments = Extension(
 	include_dirs = ['CPPUtils/General'],
 	extra_compile_args=extra_compile_args)
 
+BasicSamplers_Src=[
+	'CPPUtils/DSPUtil/complex.cpp',
+	'CPPUtils/DSPUtil/fft.cpp',
+	'SingingGadgets/BasicSamplers/BasicSamplers.cpp',
+	'SingingGadgets/BasicSamplers/PercussionSampler.cpp',
+	'SingingGadgets/BasicSamplers/InstrumentSingleSampler.cpp',
+	'SingingGadgets/BasicSamplers/InstrumentMultiSampler.cpp',
+	'SingingGadgets/BasicSamplers/FrequencyDetection.cpp'
+]
+
+BasicSamplers_IncludeDirs=[
+	'SingingGadgets/BasicSamplers',
+	'CPPUtils/General',
+	'CPPUtils/DSPUtil'
+]
+
+module_BasicSamplers = Extension(
+	'SingingGadgets.PyBasicSamplers',
+	sources = BasicSamplers_Src,
+	include_dirs = BasicSamplers_IncludeDirs,
+	extra_compile_args=extra_compile_args)
+
 setup(
 	name = 'SingingGadgets',
 	version = '0.0.2',
@@ -93,7 +115,7 @@ setup(
 	package_data={  
         'ScoreDraft': ['TTLyricSet.data', 'VCCVLyricSet.data'],
     },
-	ext_modules=[module_WavUtils, module_TrackBuffer, module_VoiceSampler, module_SF2Synth, module_SimpleInstruments],
+	ext_modules=[module_WavUtils, module_TrackBuffer, module_VoiceSampler, module_SF2Synth, module_SimpleInstruments, module_BasicSamplers],
 	project_urls={  
         'Source': 'https://github.com/fynv/SingingGadgets',
         'Documentation': 'https://scoredraft.org'

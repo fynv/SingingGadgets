@@ -31,8 +31,11 @@ def TellDuration(seq):
 				duration += item[1]
 	return duration
 
+from .Catalog import Catalog
+from .Catalog import PrintCatalog
+
 from .Instrument import Instrument
-# from .Percussion import Percussion
+from .Percussion import Percussion
 from .Singer import Singer
 
 from .UtauDraft import GetVoiceBank as GetVoiceBankUTAU
@@ -54,6 +57,7 @@ def """+item+UTAU_VB_SUFFIX+"""(useCuda=True):
 	return UtauDraft('"""+UTAU_VB_ROOT+"""/"""+item+"""',useCuda)
 """
 			exec(definition)
+			Catalog['Singers'] += [item+UTAU_VB_SUFFIX+' - UtauDraft']
 
 from .SF2Instrument import ListPresets as ListPresetsSF2
 from .SF2Instrument import SF2Instrument
@@ -72,6 +76,7 @@ def """+name+"""_List():
 	ListPresetsSF2('"""+sf2_path+"""')
 """
 			exec(definition)
+			Catalog['Instruments'] += [name+' - SF2Instrument']
 
 from .SimpleInstruments import PureSin
 from .SimpleInstruments import Square
@@ -79,3 +84,42 @@ from .SimpleInstruments import Triangle
 from .SimpleInstruments import Sawtooth
 from .SimpleInstruments import NaivePiano
 from .SimpleInstruments import BottleBlow
+
+from .InstrumentSampler import InstrumentSampler_Single
+from .InstrumentSampler import InstrumentSampler_Multi
+
+INSTR_SAMPLE_ROOT='InstrumentSamples'
+if os.path.isdir(INSTR_SAMPLE_ROOT):
+	for item in os.listdir(INSTR_SAMPLE_ROOT):
+		inst_path = INSTR_SAMPLE_ROOT+'/'+item
+		if os.path.isfile(inst_path) and item.endswith(".wav"):
+			name = item[0:len(item)-4]
+			definition="""
+def """+name+"""():
+	return InstrumentSampler_Single('"""+inst_path+"""')
+"""
+			exec(definition)
+			Catalog['Instruments'] += [name+' - InstrumentSampler_Single']
+		elif os.path.isdir(inst_path):
+			definition="""
+def """+item+"""():
+	return InstrumentSampler_Multi('"""+inst_path+"""')
+"""
+			exec(definition)
+			Catalog['Instruments'] += [name+' - InstrumentSampler_Multi']
+
+from .PercussionSampler import PercussionSampler
+
+PERC_SAMPLE_ROOT='PercussionSamples'
+if os.path.isdir(PERC_SAMPLE_ROOT):
+	for item in os.listdir(PERC_SAMPLE_ROOT):
+		file_path = PERC_SAMPLE_ROOT+'/'+item
+		if os.path.isfile(file_path) and item.endswith(".wav"):
+			name = item[0:len(item)-4]
+			definition="""
+def """+name+"""():
+	return PercussionSampler('"""+file_path+"""')
+"""
+			exec(definition)
+			Catalog['Percussions'] += [name+' - PercussionSampler']
+

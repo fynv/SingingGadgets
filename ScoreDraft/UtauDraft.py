@@ -1,6 +1,8 @@
 import wave
 import SingingGadgets as sg
 from .Singer import Singer
+from .Catalog import Catalog
+Catalog['Engines'] += ['UtauDraft - Singing']
 
 VoiceBanks={}
 

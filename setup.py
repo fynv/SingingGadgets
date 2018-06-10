@@ -73,6 +73,12 @@ module_SF2Synth = Extension(
 	include_dirs = SF2Synth_IncludeDirs,
 	extra_compile_args=extra_compile_args)
 
+module_SimpleInstruments = Extension(
+	'SingingGadgets.PySimpleInstruments',
+	sources = ['SingingGadgets/SimpleInstruments/SimpleInstruments.cpp'],
+	include_dirs = ['CPPUtils/General'],
+	extra_compile_args=extra_compile_args)
+
 setup(
 	name = 'SingingGadgets',
 	version = '0.0.2',
@@ -87,7 +93,7 @@ setup(
 	package_data={  
         'ScoreDraft': ['TTLyricSet.data', 'VCCVLyricSet.data'],
     },
-	ext_modules=[module_WavUtils, module_TrackBuffer, module_VoiceSampler, module_SF2Synth],
+	ext_modules=[module_WavUtils, module_TrackBuffer, module_VoiceSampler, module_SF2Synth, module_SimpleInstruments],
 	project_urls={  
         'Source': 'https://github.com/fynv/SingingGadgets',
         'Documentation': 'https://scoredraft.org'

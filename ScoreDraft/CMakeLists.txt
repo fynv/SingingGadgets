@@ -5,6 +5,7 @@ __init__.py
 Singer.py
 UtauDraft.py
 Notes.py
+RapChinese.py
 CVVCChineseConverter.py
 XiaYYConverter.py
 JPVCVConverter.py
@@ -21,6 +22,8 @@ InstrumentSampler.py
 
 Percussion.py
 PercussionSampler.py
+
+Document.py
 
 Catalog.py
 )

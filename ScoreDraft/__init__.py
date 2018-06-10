@@ -37,6 +37,7 @@ from .Catalog import PrintCatalog
 from .Instrument import Instrument
 from .Percussion import Percussion
 from .Singer import Singer
+from .Document import Document
 
 from .UtauDraft import GetVoiceBank as GetVoiceBankUTAU
 from .UtauDraft import UtauDraft

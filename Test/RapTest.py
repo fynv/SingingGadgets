@@ -3,19 +3,8 @@
 import SingingGadgets as sg
 import ScoreDraft as sd
 from ScoreDraft.Notes import *
+from ScoreDraft.RapChinese import *
 from tang300 import poems
-
-def CRap(lyric, tone, duration=48):
-	if tone <= 1:
-		return (lyric, duration, 1.0, 1.0)
-	elif tone == 2:
-		return (lyric, duration, 0.7, 1.0)
-	elif tone == 3:
-		return (lyric, duration, 0.5, 0.75)
-	elif tone == 4:
-		return (lyric, duration, 1.0, 0.5)
-	else:
-		return (lyric, duration, 0.75, 0.55)
 
 
 #import Meteor

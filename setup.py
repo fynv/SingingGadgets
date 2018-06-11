@@ -61,6 +61,7 @@ module_VoiceSampler = Extension(
 
 SF2Synth_Src=[
 	'SingingGadgets/SF2Synth/SF2Synth_Module.cpp',
+	'SingingGadgets/SF2Synth/SF2Synth.cpp',
 	'SingingGadgets/SF2Synth/Synth.cpp']
 
 SF2Synth_IncludeDirs=[

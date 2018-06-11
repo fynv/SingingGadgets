@@ -4,11 +4,13 @@ find_package(PythonLibs 3 REQUIRED)
 
 set(SOURCES
 Synth.cpp
+SF2Synth.cpp
 SF2Synth_Module.cpp
 )
 
 set(HEADERS 
 Synth.h
+SF2Synth.h
 )
 
 

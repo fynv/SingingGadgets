@@ -1,5 +1,6 @@
 #include <Python.h>
 #include "Synth.h"
+#include "SF2Synth.h"
 
 static PyObject* Synth(PyObject *self, PyObject *args)
 {
@@ -67,10 +68,84 @@ static PyObject* Synth(PyObject *self, PyObject *args)
 	return PyLong_FromLong(0);
 }
 
+static void unpackEnvelope(PyObject* o_env, tsf_envelope& env)
+{
+	env.delay = (float)PyFloat_AsDouble(PyDict_GetItemString(o_env, "delay"));
+	env.attack = (float)PyFloat_AsDouble(PyDict_GetItemString(o_env, "attack"));
+	env.hold = (float)PyFloat_AsDouble(PyDict_GetItemString(o_env, "hold"));
+	env.decay = (float)PyFloat_AsDouble(PyDict_GetItemString(o_env, "decay"));
+	env.sustain = (float)PyFloat_AsDouble(PyDict_GetItemString(o_env, "sustain"));
+	env.release = (float)PyFloat_AsDouble(PyDict_GetItemString(o_env, "release"));
+	env.keynumToHold = (float)PyFloat_AsDouble(PyDict_GetItemString(o_env, "keynumToHold"));
+	env.keynumToDecay = (float)PyFloat_AsDouble(PyDict_GetItemString(o_env, "keynumToDecay"));
+}
+
+static void unpackRegion(PyObject* o_region, tsf_region& region)
+{
+	region.loop_mode = (int)PyLong_AsLong(PyDict_GetItemString(o_region, "loop_mode"));
+	region.sample_rate = (unsigned)PyLong_AsUnsignedLong(PyDict_GetItemString(o_region, "sample_rate"));
+	region.offset = (unsigned)PyLong_AsUnsignedLong(PyDict_GetItemString(o_region, "offset"));
+	region.end = (unsigned)PyLong_AsUnsignedLong(PyDict_GetItemString(o_region, "end"));
+	region.loop_start = (unsigned)PyLong_AsUnsignedLong(PyDict_GetItemString(o_region, "loop_start"));
+	region.loop_end = (unsigned)PyLong_AsUnsignedLong(PyDict_GetItemString(o_region, "loop_end"));
+	region.transpose = (int)PyLong_AsLong(PyDict_GetItemString(o_region, "transpose"));
+	region.tune = (int)PyLong_AsLong(PyDict_GetItemString(o_region, "tune"));
+	region.pitch_keycenter = (int)PyLong_AsLong(PyDict_GetItemString(o_region, "pitch_keycenter"));
+	region.pitch_keytrack = (int)PyLong_AsLong(PyDict_GetItemString(o_region, "pitch_keytrack"));
+	region.attenuation = (float)PyFloat_AsDouble(PyDict_GetItemString(o_region, "attenuation"));
+	region.pan = (float)PyFloat_AsDouble(PyDict_GetItemString(o_region, "pan"));
+	PyObject* o_ampenv = PyDict_GetItemString(o_region, "ampenv");
+	unpackEnvelope(o_ampenv, region.ampenv);
+	PyObject* o_modenv = PyDict_GetItemString(o_region, "modenv");
+	unpackEnvelope(o_modenv, region.modenv);
+	region.initialFilterQ = (int)PyLong_AsLong(PyDict_GetItemString(o_region, "initialFilterQ"));
+	region.initialFilterFc = (int)PyLong_AsLong(PyDict_GetItemString(o_region, "initialFilterFc"));
+	region.modEnvToPitch = (int)PyLong_AsLong(PyDict_GetItemString(o_region, "modEnvToPitch"));
+	region.modEnvToFilterFc = (int)PyLong_AsLong(PyDict_GetItemString(o_region, "modEnvToFilterFc"));
+	region.modLfoToFilterFc = (int)PyLong_AsLong(PyDict_GetItemString(o_region, "modLfoToFilterFc"));
+	region.modLfoToVolume = (int)PyLong_AsLong(PyDict_GetItemString(o_region, "modLfoToVolume"));
+	region.delayModLFO = (float)PyFloat_AsDouble(PyDict_GetItemString(o_region, "delayModLFO"));
+	region.freqModLFO = (int)PyLong_AsLong(PyDict_GetItemString(o_region, "freqModLFO"));
+	region.modLfoToPitch = (int)PyLong_AsLong(PyDict_GetItemString(o_region, "modLfoToPitch"));
+	region.delayVibLFO = (float)PyFloat_AsDouble(PyDict_GetItemString(o_region, "delayVibLFO"));
+	region.freqVibLFO = (int)PyLong_AsLong(PyDict_GetItemString(o_region, "freqVibLFO"));
+	region.vibLfoToPitch = (int)PyLong_AsLong(PyDict_GetItemString(o_region, "vibLfoToPitch"));
+}
+
+static PyObject* SynthRegion(PyObject *self, PyObject *args)
+{
+	PyObject* obj_input = PyTuple_GetItem(args, 0);
+
+	ssize_t len_in;
+	char* p_in;
+	PyBytes_AsStringAndSize(obj_input, &p_in, &len_in);
+	len_in /= sizeof(float);
+	float* input = (float*)p_in;
+
+	tsf_region region;
+	PyObject* o_region = PyTuple_GetItem(args, 1);
+	unpackRegion(o_region, region);
+
+	float key = (float)PyFloat_AsDouble(PyTuple_GetItem(args, 2));
+	float vel = (float)PyFloat_AsDouble(PyTuple_GetItem(args, 3));
+	unsigned numSamples = (unsigned)PyLong_AsUnsignedLong(PyTuple_GetItem(args, 4));
+	OutputMode outputmode = (OutputMode)PyLong_AsUnsignedLong(PyTuple_GetItem(args, 5));
+	float samplerate = (float)PyFloat_AsDouble(PyTuple_GetItem(args, 6));
+	float global_gain_db = (float)PyFloat_AsDouble(PyTuple_GetItem(args, 7));
+
+	return SynthRegion(input, region, key, vel, numSamples, outputmode, samplerate, global_gain_db);
+}
+
 static PyMethodDef s_Methods[] = {
 	{
 		"Synth",
 		Synth,
+		METH_VARARGS,
+		""
+	},
+	{
+		"SynthRegion",
+		SynthRegion,
 		METH_VARARGS,
 		""
 	},

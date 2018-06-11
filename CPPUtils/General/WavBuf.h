@@ -7,7 +7,17 @@ struct PyWavBuf
 {
 	PyObject* pyWavBuf;
 	
-	PyWavBuf();
+	PyWavBuf()
+	{
+		pyWavBuf = PyDict_New();
+		PyDict_SetItemString(pyWavBuf, "sample_rate", PyFloat_FromDouble(44100.0));
+		PyDict_SetItemString(pyWavBuf, "num_channels", PyLong_FromLong(1));
+		PyObject* dataBuf = PyBytes_FromStringAndSize(nullptr, 0);
+		PyDict_SetItemString(pyWavBuf, "data", dataBuf);
+		PyDict_SetItemString(pyWavBuf, "align_pos", PyLong_FromLong(0));
+		PyDict_SetItemString(pyWavBuf, "volume", PyFloat_FromDouble(1.0));
+		PyDict_SetItemString(pyWavBuf, "pan", PyFloat_FromDouble(0.0));
+	}
 	PyWavBuf(PyObject* in)
 	{
 		pyWavBuf = in;
@@ -80,18 +90,6 @@ struct PyWavBuf
 	}
 
 };
-
-PyWavBuf::PyWavBuf()
-{
-	pyWavBuf = PyDict_New();
-	PyDict_SetItemString(pyWavBuf, "sample_rate", PyFloat_FromDouble(44100.0));
-	PyDict_SetItemString(pyWavBuf, "num_channels", PyLong_FromLong(1));
-	PyObject* dataBuf = PyBytes_FromStringAndSize(nullptr, 0);
-	PyDict_SetItemString(pyWavBuf, "data", dataBuf);
-	PyDict_SetItemString(pyWavBuf, "align_pos", PyLong_FromLong(0));
-	PyDict_SetItemString(pyWavBuf, "volume", PyFloat_FromDouble(1.0));
-	PyDict_SetItemString(pyWavBuf, "pan", PyFloat_FromDouble(0.0));
-}
 
 #endif
 

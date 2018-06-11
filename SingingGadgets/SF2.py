@@ -2,6 +2,16 @@
 import struct
 from .PyWavUtils import S16ToF32
 
+def decode_string(with_zero):
+	no_zero=bytes()
+	for i in range(len(with_zero)):
+		b= with_zero[i]
+		if b!=0 and b<128:
+			no_zero+=with_zero[i:i+1]
+		else:
+			break
+	return no_zero.decode('ascii')
+
 def ReadRiffChunk(f):
 	fourcc = f.read(4).decode('ascii')
 	size = struct.unpack('i',f.read(4))[0]
@@ -12,7 +22,7 @@ def ReadRiffChunk(f):
 
 def HydraRead_phdr(f):
 	phdr={}
-	phdr['presetName'] = f.read(20).decode('ascii').rstrip('\0')
+	phdr['presetName'] = decode_string(f.read(20))
 	phdr['preset'] = struct.unpack('H',f.read(2))[0]
 	phdr['bank'] = struct.unpack('H',f.read(2))[0]
 	phdr['presetBagNdx'] = struct.unpack('H',f.read(2))[0]
@@ -44,7 +54,7 @@ def HydraRead_pgen(f):
 
 def HydraRead_inst(f):
 	inst={}
-	inst['instName'] = f.read(20).decode('ascii').rstrip('\0')
+	inst['instName'] = decode_string(f.read(20))
 	inst['instBagNdx'] = struct.unpack('H',f.read(2))[0]
 	return inst
 
@@ -71,7 +81,7 @@ def HydraRead_igen(f):
 
 def HydraRead_shdr(f):
 	shdr={}
-	shdr['sampleName'] = f.read(20).decode('ascii').rstrip('\0')
+	shdr['sampleName'] =  decode_string(f.read(20))
 	shdr['start'] = struct.unpack('I',f.read(4))[0]
 	shdr['end'] = struct.unpack('I',f.read(4))[0]
 	shdr['startLoop'] = struct.unpack('I',f.read(4))[0]

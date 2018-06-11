@@ -3,14 +3,13 @@ import struct
 from .PyWavUtils import S16ToF32
 
 def decode_string(with_zero):
-	no_zero=bytes()
-	for i in range(len(with_zero)):
+	i=0
+	while i<len(with_zero):
 		b= with_zero[i]
-		if b!=0 and b<128:
-			no_zero+=with_zero[i:i+1]
-		else:
+		if b==0 or b>=128:
 			break
-	return no_zero.decode('ascii')
+		i+=1
+	return with_zero[0:i].decode('ascii')
 
 def ReadRiffChunk(f):
 	fourcc = f.read(4).decode('ascii')

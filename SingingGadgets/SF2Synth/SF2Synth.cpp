@@ -204,6 +204,10 @@ static void tsf_voice_lfo_process(struct tsf_voice_lfo* e, int blockSamples)
 PyObject* SynthRegion(const float* input, const tsf_region& region, float key, float vel,
 	unsigned numSamples, OutputMode outputmode, float samplerate, float global_gain_db)
 {
+	/*FILE *fp = fopen("dump.txt", "a");
+	region.print(fp);
+	fclose(fp);*/
+
 	int midiVelocity = (int)(vel * 127);
 
 	float noteGainDB = global_gain_db - region.attenuation - tsf_gainToDecibels(1.0f / vel);

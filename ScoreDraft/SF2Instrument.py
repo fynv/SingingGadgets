@@ -38,7 +38,7 @@ class Engine:
 
 	def generateWave(self, freq, fduration, sampleRate):
 		key = math.log(freq / 261.626)/math.log(2)*12.0+60.0
-		num_samples = int(fduration * sampleRate * 0.001)
+		num_samples = int(fduration * sampleRate * 0.001+0.5)
 		(actual_num_samples, F32Samples) = sg.SynthNoteSF2(self.fontSamples, self.preset, key, self.vel, num_samples, sg.STEREO_INTERLEAVED, sampleRate, self.global_gain_db)
 		return {
 			'sample_rate': sampleRate,

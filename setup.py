@@ -102,6 +102,16 @@ module_BasicSamplers = Extension(
 	include_dirs = BasicSamplers_IncludeDirs,
 	extra_compile_args=extra_compile_args)
 
+MeteorGenerator_Src=[
+	'ScoreDraft/MeteorGenerator/MeteorGenerator.cpp',	
+]
+
+module_MeteorGenerator = Extension(
+	'ScoreDraft.PyMeteorGenerator',
+	sources = MeteorGenerator_Src,
+	extra_compile_args=extra_compile_args)
+
+
 setup(
 	name = 'SingingGadgets',
 	version = '0.0.2',
@@ -116,7 +126,7 @@ setup(
 	package_data={  
         'ScoreDraft': ['TTLyricSet.data', 'VCCVLyricSet.data'],
     },
-	ext_modules=[module_WavUtils, module_TrackBuffer, module_VoiceSampler, module_SF2Synth, module_SimpleInstruments, module_BasicSamplers],
+	ext_modules=[module_WavUtils, module_TrackBuffer, module_VoiceSampler, module_SF2Synth, module_SimpleInstruments, module_BasicSamplers, module_MeteorGenerator],
 	project_urls={  
         'Source': 'https://github.com/fynv/SingingGadgets',
         'Documentation': 'https://scoredraft.org'

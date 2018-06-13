@@ -39,6 +39,8 @@ from .Percussion import Percussion
 from .Singer import Singer
 from .Document import Document
 
+from .Meteor import Document as MeteorDocument
+
 from .UtauDraft import GetVoiceBank as GetVoiceBankUTAU
 from .UtauDraft import UtauDraft
 from .CVVCChineseConverter import CVVCChineseConverter

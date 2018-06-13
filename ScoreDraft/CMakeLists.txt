@@ -24,6 +24,7 @@ Percussion.py
 PercussionSampler.py
 
 Document.py
+Meteor.py
 
 Catalog.py
 )

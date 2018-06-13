@@ -54,3 +54,8 @@ If you are using a compatible system, try:
 ## Usage
 
 See [http://scoredraft.org/index.php/2018/05/30/singinggadgets-how-to-use/](http://scoredraft.org/index.php/2018/05/30/singinggadgets-how-to-use/)
+
+## License
+
+pyTinySoundFont is available under the [MIT license](https://choosealicense.com/licenses/mit/).
+

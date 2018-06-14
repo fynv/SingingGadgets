@@ -1,7 +1,7 @@
 SingingGadgets
 ================
 
-This is an on-going refactor of [ScoreDraft](https://github.com/fynv/ScoreDraft) to address 2 weakness of ScoreDraft when considering it as a Python library:
+This is an refactor of [ScoreDraft](https://github.com/fynv/ScoreDraft) to address 2 weakness of ScoreDraft when considering it as a Python library:
 
 * PyPi Compatibility 
 * Low-level Interface Exposing.

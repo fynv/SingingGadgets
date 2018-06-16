@@ -1,5 +1,6 @@
 #include <Python.h>
 #include <vector>
+#include <string>
 #include "SubListLookUp.h"
 
 struct VisNote

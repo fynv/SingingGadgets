@@ -114,11 +114,12 @@ module_MeteorGenerator = Extension(
 
 setup(
 	name = 'SingingGadgets',
-	version = '0.0.2',
+	version = '0.0.3',
 	description = 'Low level tools for singing synthesis',
 	long_description=long_description,
 	long_description_content_type='text/markdown',  
 	url='https://github.com/fynv/SingingGadgets',
+	license='MIT',
 	author='Fei Yang',
 	author_email='hyangfeih@gmail.com',
 	keywords='synthesizer PSOLA HNM',

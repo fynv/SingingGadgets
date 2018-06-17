@@ -126,3 +126,4 @@ def """+name+"""():
 			exec(definition)
 			Catalog['Percussions'] += [name+' - PercussionSampler']
 
+from .KarplusStrongInstrument import KarplusStrongInstrument

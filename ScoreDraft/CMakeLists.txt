@@ -16,9 +16,10 @@ TTLyricSet.data
 VCCVLyricSet.data
 
 Instrument.py
-SF2Instrument.py
 SimpleInstruments.py
 InstrumentSampler.py
+SF2Instrument.py
+KarplusStrongInstrument.py
 
 Percussion.py
 PercussionSampler.py

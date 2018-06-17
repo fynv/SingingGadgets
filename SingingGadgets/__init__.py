@@ -53,3 +53,5 @@ from .BasicSamplers import DetectBaseFreq
 from .BasicSamplers import InstrumentSingleSample
 from .BasicSamplers import InstrumentMultiSample
 from .BasicSamplers import PercussionSample
+
+from .KarplusStrong import KarplusStrongGenerate

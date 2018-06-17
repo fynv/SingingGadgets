@@ -111,6 +111,16 @@ module_MeteorGenerator = Extension(
 	sources = MeteorGenerator_Src,
 	extra_compile_args=extra_compile_args)
 
+module_KarplusStrong = Extension(
+	'SingingGadgets.PyKarplusStrong',
+	sources = [
+		'SingingGadgets/KarplusStrong/KarplusStrong.cpp',
+		'CPPUtils/DSPUtil/complex.cpp',
+		'CPPUtils/DSPUtil/fft.cpp'
+		],
+	include_dirs = ['CPPUtils/General', 'CPPUtils/DSPUtil'],
+	extra_compile_args=extra_compile_args)
+
 
 setup(
 	name = 'SingingGadgets',
@@ -127,7 +137,16 @@ setup(
 	package_data={  
         'ScoreDraft': ['TTLyricSet.data', 'VCCVLyricSet.data'],
     },
-	ext_modules=[module_WavUtils, module_TrackBuffer, module_VoiceSampler, module_SF2Synth, module_SimpleInstruments, module_BasicSamplers, module_MeteorGenerator],
+	ext_modules=[
+		module_WavUtils, 
+		module_TrackBuffer, 
+		module_VoiceSampler, 
+		module_SF2Synth, 
+		module_SimpleInstruments, 
+		module_BasicSamplers, 
+		module_MeteorGenerator,
+		module_KarplusStrong
+		],
 	project_urls={  
         'Source': 'https://github.com/fynv/SingingGadgets',
         'Documentation': 'https://scoredraft.org'

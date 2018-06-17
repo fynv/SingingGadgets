@@ -9,6 +9,7 @@ SF2Presets.py
 SF2Synth.py
 SimpleInstruments.py
 BasicSamplers.py
+KarplusStrong.py
 )
 
 install(FILES ${PYTHON} DESTINATION SingingGadgets)

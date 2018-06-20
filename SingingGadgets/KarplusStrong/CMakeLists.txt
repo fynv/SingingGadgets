@@ -51,9 +51,10 @@ set_target_properties(KarplusStrong PROPERTIES PREFIX "Py")
 
 target_link_libraries(KarplusStrong ${LINK_LIBS})
 
-install(TARGETS KarplusStrong 
-		RUNTIME DESTINATION SingingGadgets)
-
-
+if (WIN32) 
+install(TARGETS KarplusStrong RUNTIME DESTINATION SingingGadgets)
+else()
+install(TARGETS KarplusStrong DESTINATION SingingGadgets)
+endif()
 
 

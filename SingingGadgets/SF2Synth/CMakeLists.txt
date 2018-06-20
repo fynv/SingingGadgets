@@ -46,9 +46,9 @@ set_target_properties(SF2Synth PROPERTIES PREFIX "Py")
 
 target_link_libraries(SF2Synth ${LINK_LIBS})
 
-install(TARGETS SF2Synth 
-		RUNTIME DESTINATION SingingGadgets)
-
-
-
+if (WIN32) 
+install(TARGETS SF2Synth RUNTIME DESTINATION SingingGadgets)
+else()
+install(TARGETS SF2Synth DESTINATION SingingGadgets)
+endif()
 

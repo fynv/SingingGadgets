@@ -43,9 +43,10 @@ set_target_properties(MeteorGenerator PROPERTIES PREFIX "Py")
 
 target_link_libraries(MeteorGenerator ${LINK_LIBS})
 
-install(TARGETS MeteorGenerator 
-		RUNTIME DESTINATION ScoreDraft)
-
-
+if (WIN32) 
+install(TARGETS MeteorGenerator RUNTIME DESTINATION ScoreDraft)
+else()
+install(TARGETS MeteorGenerator DESTINATION ScoreDraft)
+endif()
 
 

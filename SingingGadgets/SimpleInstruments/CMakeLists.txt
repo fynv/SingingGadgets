@@ -46,9 +46,9 @@ set_target_properties(SimpleInstruments PROPERTIES PREFIX "Py")
 
 target_link_libraries(SimpleInstruments ${LINK_LIBS})
 
-install(TARGETS SimpleInstruments 
-		RUNTIME DESTINATION SingingGadgets)
-
-
-
+if (WIN32)
+install(TARGETS SimpleInstruments RUNTIME DESTINATION SingingGadgets)
+else()
+install(TARGETS SimpleInstruments DESTINATION SingingGadgets)
+endif()
 

@@ -42,9 +42,9 @@ set_target_properties(WavUtils PROPERTIES PREFIX "Py")
 
 target_link_libraries(WavUtils ${LINK_LIBS})
 
-install(TARGETS WavUtils 
-		RUNTIME DESTINATION SingingGadgets)
-
-
-
+if (WIN32) 
+install(TARGETS WavUtils RUNTIME DESTINATION SingingGadgets)
+else()
+install(TARGETS WavUtils DESTINATION SingingGadgets)
+endif()
 

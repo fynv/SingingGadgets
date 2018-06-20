@@ -87,7 +87,8 @@ set_target_properties(VoiceSampler PROPERTIES PREFIX "Py")
 
 target_link_libraries(VoiceSampler ${LINK_LIBS})
 
-install(TARGETS VoiceSampler 
-		RUNTIME DESTINATION SingingGadgets)
-
-
+if (WIN32) 
+install(TARGETS VoiceSampler RUNTIME DESTINATION SingingGadgets)
+else()
+install(TARGETS VoiceSampler DESTINATION SingingGadgets)
+endif()

@@ -60,6 +60,8 @@ set_target_properties(BasicSamplers PROPERTIES PREFIX "Py")
 
 target_link_libraries(BasicSamplers ${LINK_LIBS})
 
-install(TARGETS BasicSamplers 
-		RUNTIME DESTINATION SingingGadgets)
-
+if (WIN32)
+install(TARGETS BasicSamplers RUNTIME DESTINATION SingingGadgets)
+else()
+install(TARGETS BasicSamplers DESTINATION SingingGadgets)
+endif()

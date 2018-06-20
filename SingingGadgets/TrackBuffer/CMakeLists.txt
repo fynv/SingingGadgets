@@ -52,9 +52,9 @@ set_target_properties(TrackBuffer PROPERTIES PREFIX "Py")
 
 target_link_libraries(TrackBuffer ${LINK_LIBS})
 
-install(TARGETS TrackBuffer 
-		RUNTIME DESTINATION SingingGadgets)
-
-
-
+if (WIN32) 
+install(TARGETS TrackBuffer RUNTIME DESTINATION SingingGadgets)
+else()
+install(TARGETS TrackBuffer DESTINATION SingingGadgets)
+endif()
 

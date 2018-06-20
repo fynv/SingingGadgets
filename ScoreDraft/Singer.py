@@ -134,7 +134,7 @@ class SingerShell:
 				
 		beatPos=0
 		for item in seq:
-			if type(item)== tuple:
+			if isinstance(item, (list, tuple)):
 				_item = item[0]	
 				if type(_item) == str: # singing
 					totalDuration = 0
@@ -148,11 +148,11 @@ class SingerShell:
 							lyric=self.default_lyric
 						j+=1
 						_item=item[j]
-						if type(_item) == tuple: # singing note
+						if isinstance(_item, (list, tuple)): # singing note
 							syllable={'lyric': lyric, 'ctrlPnts':[]}
 							while j<tupleSize:
 								_item = item[j]
-								if type(_item) != tuple:
+								if not isinstance(_item, (list, tuple)):
 									break
 								numCtrlPnt= (len(_item)+1)//2
 								for k in range(numCtrlPnt):

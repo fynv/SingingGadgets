@@ -75,7 +75,7 @@ class InstrumentShell:
 
 		beatPos=0
 		for item in seq:
-			if type(item)== tuple:
+			if isinstance(item, (list, tuple)):
 				_item = item[0]	
 				if type(_item) == str: # singing
 					tupleSize=len(item)
@@ -84,10 +84,10 @@ class InstrumentShell:
 					while j<tupleSize:
 						j+=1 # by-pass lyric
 						_item=item[j]
-						if type(_item) == tuple: # singing note
+						if isinstance(_item, (list, tuple)): # singing note
 							while j<tupleSize:
 								_item = item[j]
-								if type(_item) != tuple:
+								if not isinstance(_item, (list, tuple)):
 									break
 								note=(_item[0],_item[1])
 

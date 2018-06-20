@@ -7,7 +7,7 @@ def isNumber(x):
 def TellDuration(seq):
 	duration = 0
 	for item in seq:
-		if type(item)== tuple:
+		if isinstance(item, (list, tuple)):
 			_item = item[0]	
 			if type(_item) == str: # singing
 				tupleSize=len(item)
@@ -15,10 +15,10 @@ def TellDuration(seq):
 				while j<tupleSize:
 					j+=1  # by-pass lyric
 					_item=item[j]
-					if type(_item) == tuple: # singing note
+					if isinstance(_item, (list, tuple)): # singing note
 						while j<tupleSize:
 							_item = item[j]
-							if type(_item) != tuple:
+							if not isinstance(_item, (list, tuple)):
 								break
 							numCtrlPnt= len(_item)//2
 							for k in range(numCtrlPnt):

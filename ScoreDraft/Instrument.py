@@ -96,6 +96,7 @@ class InstrumentShell:
 								else:
 									self.PlayNoteB(engine,buf, note, tempo, refFreq)
 								beatPos+=note[1]
+								j+=1
 
 						elif isNumber(_item): # singing rap
 							duration = item[j]

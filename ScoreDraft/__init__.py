@@ -109,7 +109,7 @@ def """+item+"""():
 	return InstrumentSampler_Multi('"""+inst_path+"""')
 """
 			exec(definition)
-			Catalog['Instruments'] += [name+' - InstrumentSampler_Multi']
+			Catalog['Instruments'] += [item+' - InstrumentSampler_Multi']
 
 from .PercussionSampler import PercussionSampler
 

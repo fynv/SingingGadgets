@@ -50,7 +50,9 @@ from .TsuroVCVConverter import TsuroVCVConverter
 from .TTEnglishConverter import TTEnglishConverter
 from .VCCVEnglishConverter import VCCVEnglishConverter
 
-UTAU_VB_ROOT='UTAUVoice'
+RESOURCE_ROOT='.'
+
+UTAU_VB_ROOT=RESOURCE_ROOT+'/UTAUVoice'
 UTAU_VB_SUFFIX='_UTAU'
 if os.path.isdir(UTAU_VB_ROOT):
 	for item in os.listdir(UTAU_VB_ROOT):
@@ -65,7 +67,7 @@ def """+item+UTAU_VB_SUFFIX+"""(useCuda=True):
 from .SF2Instrument import ListPresets as ListPresetsSF2
 from .SF2Instrument import SF2Instrument
 
-SF2_ROOT='SF2'
+SF2_ROOT=RESOURCE_ROOT+'/SF2'
 if os.path.isdir(SF2_ROOT):
 	for item in os.listdir(SF2_ROOT):
 		sf2_path = SF2_ROOT+'/'+item
@@ -91,7 +93,7 @@ from .SimpleInstruments import BottleBlow
 from .InstrumentSampler import InstrumentSampler_Single
 from .InstrumentSampler import InstrumentSampler_Multi
 
-INSTR_SAMPLE_ROOT='InstrumentSamples'
+INSTR_SAMPLE_ROOT=RESOURCE_ROOT+'/InstrumentSamples'
 if os.path.isdir(INSTR_SAMPLE_ROOT):
 	for item in os.listdir(INSTR_SAMPLE_ROOT):
 		inst_path = INSTR_SAMPLE_ROOT+'/'+item
@@ -113,7 +115,7 @@ def """+item+"""():
 
 from .PercussionSampler import PercussionSampler
 
-PERC_SAMPLE_ROOT='PercussionSamples'
+PERC_SAMPLE_ROOT=RESOURCE_ROOT+'/PercussionSamples'
 if os.path.isdir(PERC_SAMPLE_ROOT):
 	for item in os.listdir(PERC_SAMPLE_ROOT):
 		file_path = PERC_SAMPLE_ROOT+'/'+item

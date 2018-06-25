@@ -3,6 +3,7 @@
 #include <Sample.h>
 #include <vector>
 #include <stdio.h>
+#include <cstdlib>
 #include "FrequencyDetection.h"
 #include "InstrumentSingleSampler.h"
 #include "InstrumentMultiSampler.h"
@@ -117,9 +118,20 @@ static PyObject* InstrumentSingleSample(PyObject *self, PyObject *args)
 	res.GetDataPtrAndLen(ptr, len);
 	len /= sample.m_chn;
 
-	InstrumentSingleSample(sample, ptr, len, sampleFreq);
+	InstrumentSingleSample(sample, ptr, (unsigned)len, sampleFreq);
 
 	return res.pyWavBuf;
+}
+
+static int compareSampleWav(const void* a, const void* b)
+{
+	InstrumentSample& wavA = *((InstrumentSample*)a);
+	InstrumentSample& wavB = *((InstrumentSample*)b);
+
+	float origin_SampleFreqA = wavA.m_origin_freq / (float)wavA.m_origin_sample_rate;
+	float origin_SampleFreqB = wavB.m_origin_freq / (float)wavB.m_origin_sample_rate;
+
+	return origin_SampleFreqA > origin_SampleFreqB ? 1 : -1;
 }
 
 static PyObject* InstrumentMultiSample(PyObject *self, PyObject *args)
@@ -147,6 +159,7 @@ static PyObject* InstrumentMultiSample(PyObject *self, PyObject *args)
 
 		samples.push_back(sample);
 	}
+	std::qsort(samples.data(), samples.size(), sizeof(InstrumentSample), compareSampleWav);
 
 	float freq = (float)PyFloat_AsDouble(PyTuple_GetItem(args, 1));
 	float fduration = (float)PyFloat_AsDouble(PyTuple_GetItem(args, 2));
@@ -165,7 +178,7 @@ static PyObject* InstrumentMultiSample(PyObject *self, PyObject *args)
 	res.GetDataPtrAndLen(ptr, len);
 	len /= chn;
 	
-	InstrumentMultiSample(samples, ptr, len, sampleFreq);
+	InstrumentMultiSample(samples, ptr, (unsigned)len, sampleFreq);
 
 	return res.pyWavBuf;
 }
@@ -190,7 +203,7 @@ static PyObject* PercussionSample(PyObject *self, PyObject *args)
 	res.GetDataPtrAndLen(ptr, len);
 	len /= sample.m_chn;
 
-	PercussionSample(sample, ptr, len, sampleRate / (float)sample.m_origin_sample_rate);
+	PercussionSample(sample, ptr, (unsigned)len, sampleRate / (float)sample.m_origin_sample_rate);
 
 	return res.pyWavBuf;
 }

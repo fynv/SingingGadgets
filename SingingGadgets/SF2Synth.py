@@ -25,7 +25,7 @@ def SynthNote(inputSamples, preset, key, vel, numSamples, outputmode = STEREO_IN
 		if ikey < region['lokey'] or ikey > region['hikey'] or midiVelocity < region['lovel'] or midiVelocity > region['hivel']:
 			continue
 
-		res=SynthRegion(inputSamples, region, key, vel, numSamples, outputmode, samplerate, global_gain_db)
+		res=SynthRegion(inputSamples, region, key, vel, int(numSamples), outputmode, samplerate, global_gain_db)
 		bufs+=[res]
 		region_numSamples = len(res)/4/chn
 		if region_numSamples>max_numSamples:

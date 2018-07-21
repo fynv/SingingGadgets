@@ -132,3 +132,5 @@ class Instrument:
 		self.shell.volume=volume
 	def setNotePan(self,pan):
 		self.shell.pan=pan
+	def isGMDrum(self):
+		return False

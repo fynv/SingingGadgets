@@ -9,6 +9,7 @@ from .Singer import Singer
 from .PyMeteorGenerator import GenerateMeteor
 
 import json
+import math
 
 EventType_Inst=0
 EventType_Perc=1
@@ -28,21 +29,35 @@ class DummyTrackBuffer(TrackBuffer):
 			self.eventList += [event]
 
 class DummyInstrumentEngine:
-	def __init__(self, id, engine):
+	def __init__(self, id, engine, isGMDrum):
 		self.id=id
-		self.engine=engine
+		self.engine = engine
+		self.isGMDrum = isGMDrum
 
 	def tune(self, cmd):
 		return self.engine.tune(cmd)
 
 	def generateWave(self, freq, fduration, sampleRate):
 		wavBuf=self.engine.generateWave(freq, fduration, sampleRate)
-		event = {
-			'type': EventType_Inst,
-			'id': self.id,
-			'freq': freq,
-			'fduration': fduration
-		}
+		if not self.isGMDrum:
+			event = {
+				'type': EventType_Inst,
+				'id': self.id,
+				'freq': freq,
+				'fduration': fduration
+			}
+		else:
+			midiPitch = int(math.log(freq/261.626)*12.0 / math.log(2.0) + 0.5)  + 60;
+			if midiPitch<0:
+				midiPitch = 0
+			elif midiPitch>127:
+				midiPitch = 127
+			event = {
+				'type': EventType_Perc,
+				'id': midiPitch,
+				'fduration': fduration
+			}
+
 		wavBuf['event'] = event
 		return wavBuf
 
@@ -50,7 +65,7 @@ class DummyInstrumentEngine:
 class DummyInstrument(Instrument):
 	def __init__(self, id, inst):
 		Instrument.__init__(self)
-		self.engine= DummyInstrumentEngine(id, inst.engine)
+		self.engine= DummyInstrumentEngine(id, inst.engine, inst.isGMDrum())
 
 
 class DummyInstrumentCreator:
@@ -76,7 +91,7 @@ class DummyPercussionEngine:
 		wavBuf=self.engine.generateWave(fduration, sampleRate)
 		event = {
 			'type': EventType_Perc,
-			'id': self.id,
+			'id': self.id + 128,
 			'fduration': fduration
 		}
 		wavBuf['event'] = event

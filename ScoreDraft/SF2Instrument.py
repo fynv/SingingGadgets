@@ -27,6 +27,9 @@ class Engine:
 		self.global_gain_db = 0.0
 		self.vel = 1.0
 
+	def isGMDrum(self):
+		return self.preset['bank'] == 128
+
 	def tune(self, cmd):
 		cmd_split= cmd.split(' ')
 		cmd_len=len(cmd_split)
@@ -53,4 +56,6 @@ class SF2Instrument(Instrument):
 		Instrument.__init__(self)
 		sf2 = GetSF2(fn)
 		self.engine= Engine(sf2[0][preset_index], sf2[1])
+	def isGMDrum(self):
+		return self.engine.isGMDrum()
 

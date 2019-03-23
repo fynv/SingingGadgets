@@ -67,9 +67,6 @@ void ReadFromWav(TrackBuffer& track, const char* fileName)
 	}
 }
 
-typedef std::vector<TrackBuffer_deferred> TrackBufferMap;
-TrackBufferMap s_TrackBufferMap;
-
 static void ConvertWavBuf(const PyWavBuf& in, WavBuffer& out)
 {
 	out.m_sampleRate = in.GetSampleRate();
@@ -84,159 +81,99 @@ static void ConvertWavBuf(const PyWavBuf& in, WavBuffer& out)
 
 static PyObject* InitTrackBuffer(PyObject *self, PyObject *args)
 {
-	unsigned chn;
-	if (!PyArg_ParseTuple(args, "I", &chn))
-		return NULL;
-
-	TrackBuffer_deferred buffer(44100, chn);
-	unsigned id = (unsigned)s_TrackBufferMap.size();
-	s_TrackBufferMap.push_back(buffer);
-	return PyLong_FromUnsignedLong((unsigned long)(id));
+	unsigned chn = (unsigned) PyLong_AsUnsignedLong(PyTuple_GetItem(args, 0));
+	TrackBuffer* buffer = new TrackBuffer(44100, chn);
+	return PyLong_FromVoidPtr(buffer);
 }
 
 
 static PyObject* DelTrackBuffer(PyObject *self, PyObject *args)
 {
-	unsigned BufferId;
-	if (!PyArg_ParseTuple(args, "I", &BufferId))
-		return NULL;
-
-	TrackBuffer_deferred buffer = s_TrackBufferMap[BufferId];
-	buffer.Abondon();
-
+	TrackBuffer* buffer = (TrackBuffer*) PyLong_AsVoidPtr(PyTuple_GetItem(args, 0));
+	delete buffer;
 	return PyLong_FromLong(0);
 }
 
 static PyObject* TrackBufferSetVolume(PyObject *self, PyObject *args)
 {
-	unsigned BufferId;
-	float volume;
-	if (!PyArg_ParseTuple(args, "If", &BufferId, &volume))
-		return NULL;
-
-	TrackBuffer_deferred buffer = s_TrackBufferMap[BufferId];
+	TrackBuffer* buffer = (TrackBuffer*)PyLong_AsVoidPtr(PyTuple_GetItem(args, 0));
+	float volume = (float)PyFloat_AsDouble(PyTuple_GetItem(args, 1));
 	buffer->SetVolume(volume);
-
 	return PyLong_FromLong(0);
 }
 
 
 static PyObject* TrackBufferGetVolume(PyObject *self, PyObject *args)
 {
-	unsigned BufferId;
-	if (!PyArg_ParseTuple(args, "I", &BufferId))
-		return NULL;
-
-	TrackBuffer_deferred buffer = s_TrackBufferMap[BufferId];
+	TrackBuffer* buffer = (TrackBuffer*)PyLong_AsVoidPtr(PyTuple_GetItem(args, 0));
 	return PyFloat_FromDouble((double)buffer->Volume());
 }
 
 
 static PyObject* TrackBufferSetPan(PyObject *self, PyObject *args)
 {
-	unsigned BufferId;
-	float pan;
-	if (!PyArg_ParseTuple(args, "If", &BufferId, &pan))
-		return NULL;
-
-	TrackBuffer_deferred buffer = s_TrackBufferMap[BufferId];
+	TrackBuffer* buffer = (TrackBuffer*)PyLong_AsVoidPtr(PyTuple_GetItem(args, 0));
+	float pan = (float)PyFloat_AsDouble(PyTuple_GetItem(args, 1));
 	buffer->SetPan(pan);
-
 	return PyLong_FromLong(0);
 }
 
 
 static PyObject* TrackBufferGetPan(PyObject *self, PyObject *args)
 {
-	unsigned BufferId;
-	if (!PyArg_ParseTuple(args, "I", &BufferId))
-		return NULL;
-
-	TrackBuffer_deferred buffer = s_TrackBufferMap[BufferId];
+	TrackBuffer* buffer = (TrackBuffer*)PyLong_AsVoidPtr(PyTuple_GetItem(args, 0));
 	return PyFloat_FromDouble((double)buffer->Pan());
 }
 
 static PyObject* TrackBufferGetNumberOfSamples(PyObject *self, PyObject *args)
 {
-	unsigned BufferId;
-	if (!PyArg_ParseTuple(args, "I", &BufferId))
-		return NULL;
-
-	TrackBuffer_deferred buffer = s_TrackBufferMap[BufferId];
+	TrackBuffer* buffer = (TrackBuffer*)PyLong_AsVoidPtr(PyTuple_GetItem(args, 0));
 	return PyLong_FromLong((long)buffer->NumberOfSamples());
 }
 
 static PyObject* TrackBufferGetNumberOfChannels(PyObject *self, PyObject *args)
 {
-	unsigned BufferId;
-	if (!PyArg_ParseTuple(args, "I", &BufferId))
-		return NULL;
-
-	TrackBuffer_deferred buffer = s_TrackBufferMap[BufferId];
+	TrackBuffer* buffer = (TrackBuffer*)PyLong_AsVoidPtr(PyTuple_GetItem(args, 0));
 	return PyLong_FromLong((long)buffer->NumberOfChannels());
 }
 
 static PyObject* TrackBufferGetAlignPos(PyObject *self, PyObject *args)
 {
-	unsigned BufferId;
-	if (!PyArg_ParseTuple(args, "I", &BufferId))
-		return NULL;
-
-	TrackBuffer_deferred buffer = s_TrackBufferMap[BufferId];
+	TrackBuffer* buffer = (TrackBuffer*)PyLong_AsVoidPtr(PyTuple_GetItem(args, 0));
 	return PyLong_FromLong((long)buffer->AlignPos());
 }
 
 static PyObject* TrackBufferGetCursor(PyObject *self, PyObject *args)
 {
-	unsigned BufferId;
-	if (!PyArg_ParseTuple(args, "I", &BufferId))
-		return NULL;
-
-	TrackBuffer_deferred buffer = s_TrackBufferMap[BufferId];
+	TrackBuffer* buffer = (TrackBuffer*)PyLong_AsVoidPtr(PyTuple_GetItem(args, 0));
 	return PyFloat_FromDouble((double)buffer->GetCursor());
 }
 
 static PyObject* TrackBufferSetCursor(PyObject *self, PyObject *args)
 {
-	unsigned BufferId;
-	float cursor;
-	if (!PyArg_ParseTuple(args, "If", &BufferId, &cursor))
-		return NULL;
-
-	TrackBuffer_deferred buffer = s_TrackBufferMap[BufferId];
+	TrackBuffer* buffer = (TrackBuffer*)PyLong_AsVoidPtr(PyTuple_GetItem(args, 0));
+	float cursor = (float)PyFloat_AsDouble(PyTuple_GetItem(args, 1));
 	buffer->SetCursor(cursor);
-
 	return PyLong_FromLong(0);
 }
 
 static PyObject* TrackBufferMoveCursor(PyObject *self, PyObject *args)
 {
-	unsigned BufferId;
-	float cursor_delta;
-	if (!PyArg_ParseTuple(args, "If", &BufferId, &cursor_delta))
-		return NULL;
-
-	TrackBuffer_deferred buffer = s_TrackBufferMap[BufferId];
+	TrackBuffer* buffer = (TrackBuffer*)PyLong_AsVoidPtr(PyTuple_GetItem(args, 0));
+	float cursor_delta = (float)PyFloat_AsDouble(PyTuple_GetItem(args, 1));
 	buffer->MoveCursor(cursor_delta);
-
 	return PyLong_FromLong(0);
 }
 
 static PyObject* MixTrackBufferList(PyObject *self, PyObject *args)
 {
-	unsigned TargetTrackBufferId = (unsigned)PyLong_AsUnsignedLong(PyTuple_GetItem(args, 0));
+	TrackBuffer* targetBuffer = (TrackBuffer*)PyLong_AsVoidPtr(PyTuple_GetItem(args, 0));
 	PyObject *list = PyTuple_GetItem(args, 1);
 
-	TrackBuffer_deferred targetBuffer = s_TrackBufferMap[TargetTrackBufferId];  
-
 	size_t bufferCount = PyList_Size(list);
-	TrackBuffer_deferred* bufferList = new TrackBuffer_deferred[bufferCount];
+	TrackBuffer** bufferList = new TrackBuffer*[bufferCount];
 	for (size_t i = 0; i < bufferCount; i++)
-	{
-		unsigned long listId = PyLong_AsUnsignedLong(PyList_GetItem(list, i));
-		bufferList[i] = s_TrackBufferMap[listId];  
-	}
-
+		bufferList[i] = (TrackBuffer*)PyLong_AsVoidPtr(PyList_GetItem(list, i));
 	targetBuffer->CombineTracks((unsigned)bufferCount, bufferList);
 	delete[] bufferList;
 
@@ -246,36 +183,25 @@ static PyObject* MixTrackBufferList(PyObject *self, PyObject *args)
 
 static PyObject* WriteTrackBufferToWav(PyObject *self, PyObject *args)
 {
-	unsigned BufferId;
-	const char* fn;
-	if (!PyArg_ParseTuple(args, "Is", &BufferId, &fn))
-		return NULL;
-
-	TrackBuffer_deferred buffer = s_TrackBufferMap[BufferId];
+	TrackBuffer* buffer = (TrackBuffer*)PyLong_AsVoidPtr(PyTuple_GetItem(args, 0));
+	const char* fn = PyUnicode_AsUTF8(PyTuple_GetItem(args, 1));
 	WriteToWav(*buffer, fn);
-
 	return PyLong_FromUnsignedLong(0);
 }
 
 static PyObject* ReadTrackBufferFromWav(PyObject *self, PyObject *args)
 {
-	unsigned BufferId;
-	const char* fn;
-	if (!PyArg_ParseTuple(args, "Is", &BufferId, &fn))
-		return NULL;
-	TrackBuffer_deferred buffer = s_TrackBufferMap[BufferId];
+	TrackBuffer* buffer = (TrackBuffer*)PyLong_AsVoidPtr(PyTuple_GetItem(args, 0));
+	const char* fn = PyUnicode_AsUTF8(PyTuple_GetItem(args, 1));
 	ReadFromWav(*buffer, fn);
-
 	return PyLong_FromUnsignedLong(0);
 }
 
 static PyObject* TrackBufferWriteBlend(PyObject *self, PyObject *args)
 {
-	unsigned BufferId = (unsigned)PyLong_AsUnsignedLong(PyTuple_GetItem(args, 0));
+	TrackBuffer* buffer = (TrackBuffer*)PyLong_AsVoidPtr(PyTuple_GetItem(args, 0));
 	PyWavBuf pyWavBuf;
 	pyWavBuf.pyWavBuf = PyTuple_GetItem(args, 1);
-
-	TrackBuffer_deferred buffer = s_TrackBufferMap[BufferId];
 
 	WavBuffer wavBuf;
 	ConvertWavBuf(pyWavBuf, wavBuf);

@@ -11,11 +11,6 @@
 #define min(a,b)            (((a) < (b)) ? (a) : (b))
 #endif
 
-
-TrackBuffer_deferred::TrackBuffer_deferred(){}
-TrackBuffer_deferred::TrackBuffer_deferred(const TrackBuffer_deferred & in) : Deferred<TrackBuffer>(in){}
-TrackBuffer_deferred::TrackBuffer_deferred(unsigned rate, unsigned chn) : Deferred<TrackBuffer>(new TrackBuffer(rate, chn)){}
-
 static const unsigned s_localBufferSize = 65536;
 unsigned TrackBuffer::GetLocalBufferSize()
 {
@@ -255,7 +250,7 @@ void TrackBuffer::GetSamples(unsigned startIndex, unsigned length, float* buffer
 }
 
 
-bool TrackBuffer::CombineTracks(unsigned num, TrackBuffer_deferred* tracks)
+bool TrackBuffer::CombineTracks(unsigned num, TrackBuffer** tracks)
 {
 	WavBuffer targetBuffer;
 	targetBuffer.Allocate(m_chn, s_localBufferSize);

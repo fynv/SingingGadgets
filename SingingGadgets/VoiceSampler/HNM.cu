@@ -4,12 +4,6 @@
 
 #include <stdio.h>
 
-namespace std
-{
-	template<typename Tp>
-	class vector;
-}
-
 unsigned calcGroupSize(unsigned workPerGroup)
 {
 	unsigned s = 1;
@@ -27,26 +21,11 @@ unsigned calcGroupSize(unsigned workPerGroup)
 #endif
 
 template <class T>
-class CUDAVector
+struct VectorView
 {
-public:
 	unsigned count;
 	T* d_data;
 };
-
-template <class T_GPU, class T_CPU>
-class CUDAImagedVector : public CUDAVector<T_GPU>{};
-
-template <class T>
-class CUDALevel2Vector : public CUDAImagedVector<CUDAVector<T>, std::vector<T> >{};
-
-class CUDASrcBuf : public CUDAVector<float> {};
-
-namespace VoiceUtil
-{
-	struct Buffer;
-}
-typedef CUDAImagedVector<CUDASrcBuf, VoiceUtil::Buffer> CUDASrcBufList;
 
 struct SrcSampleInfo
 {
@@ -55,9 +34,6 @@ struct SrcSampleInfo
 	float dstPos;
 	int isVowel;
 };
-
-typedef CUDAVector<SrcSampleInfo> CUDASrcPieceInfo;
-typedef CUDALevel2Vector<SrcSampleInfo> CUDASrcPieceInfoList;
 
 struct Job
 {
@@ -97,15 +73,15 @@ struct CUDATempBuffer
 extern __shared__ unsigned char sbuf[];
 
 __global__
-void g_GetMaxVoiced(CUDASrcBufList cuSrcBufs, CUDASrcPieceInfoList pieceInfoList,
-CUDALevel2Vector<unsigned> cuMaxVoicedLists, CUDAVector<Job> jobMap, unsigned BufSize)
+void g_GetMaxVoiced(VectorView<VectorView<float>> cuSrcBufs, VectorView<VectorView<SrcSampleInfo>> pieceInfoList,
+VectorView<VectorView<unsigned>> cuMaxVoicedLists, VectorView<Job> jobMap, unsigned BufSize)
 {
 	unsigned numWorker = blockDim.x;
 	unsigned workerId = threadIdx.x;
 
 	const Job& job = jobMap.d_data[blockIdx.x];
 	unsigned pieceId = job.pieceId;
-	const CUDASrcPieceInfo& pieceInfo = pieceInfoList.d_data[pieceId];
+	const VectorView<SrcSampleInfo>& pieceInfo = pieceInfoList.d_data[pieceId];
 	unsigned paramId = job.jobOfPiece;
 
 	SrcSampleInfo& posInfo = pieceInfo.d_data[paramId];
@@ -126,7 +102,7 @@ CUDALevel2Vector<unsigned> cuMaxVoicedLists, CUDAVector<Job> jobMap, unsigned Bu
 
 	if (!skip)
 	{
-		const CUDASrcBuf& srcBuf = cuSrcBufs.d_data[pieceId];
+		const VectorView<float>& srcBuf = cuSrcBufs.d_data[pieceId];
 
 		d_captureFromBuf(srcBuf.count, srcBuf.d_data, posInfo.srcPos, fhalfWinlen, u_halfWidth, s_buf1);
 		d_CreateAmpSpectrumFromWindow(fhalfWinlen, u_halfWidth, s_buf1, s_buf2, uSpecLen);
@@ -166,14 +142,14 @@ CUDALevel2Vector<unsigned> cuMaxVoicedLists, CUDAVector<Job> jobMap, unsigned Bu
 		__syncthreads();
 	}
 
-	CUDAVector<unsigned>& d_maxVoicedList= cuMaxVoicedLists.d_data[pieceId];
+	VectorView<unsigned>& d_maxVoicedList = cuMaxVoicedLists.d_data[pieceId];
 
 	if (workerId==0)
 		d_maxVoicedList.d_data[job.jobOfPiece] = maxVoiced;
 }
 
-void h_GetMaxVoiced(CUDASrcBufList cuSrcBufs, CUDASrcPieceInfoList pieceInfoList,
-	CUDALevel2Vector<unsigned> cuMaxVoicedLists, CUDAVector<Job> jobMap, unsigned BufSize)
+void h_GetMaxVoiced(VectorView<VectorView<float>> cuSrcBufs, VectorView<VectorView<SrcSampleInfo>> pieceInfoList,
+	VectorView<VectorView<unsigned>> cuMaxVoicedLists, VectorView<Job> jobMap, unsigned BufSize)
 {
 	if (BufSize > 12000) BufSize = 12000;
 	unsigned groupSize = calcGroupSize(BufSize/4);
@@ -183,16 +159,16 @@ void h_GetMaxVoiced(CUDASrcBufList cuSrcBufs, CUDASrcPieceInfoList pieceInfoList
 }
 
 __global__
-void g_AnalyzeInput(CUDASrcBufList cuSrcBufs, CUDASrcPieceInfoList pieceInfoList, unsigned halfWinLen,
-unsigned specLen, CUDALevel2Vector<float> cuHarmWindows, CUDALevel2Vector<float> cuNoiseSpecs,
-CUDALevel2Vector<unsigned> cuMaxVoicedLists, CUDAVector<Job> jobMap, unsigned BufSize)
+void g_AnalyzeInput(VectorView<VectorView<float>> cuSrcBufs, VectorView<VectorView<SrcSampleInfo>> pieceInfoList, unsigned halfWinLen,
+unsigned specLen, VectorView<VectorView<float>> cuHarmWindows, VectorView<VectorView<float>> cuNoiseSpecs,
+VectorView<VectorView<unsigned>> cuMaxVoicedLists, VectorView<Job> jobMap, unsigned BufSize)
 {
 	unsigned numWorker = blockDim.x;
 	unsigned workerId = threadIdx.x;
 
 	const Job& job = jobMap.d_data[blockIdx.x];
 	unsigned pieceId = job.pieceId;
-	const CUDASrcPieceInfo& pieceInfo = pieceInfoList.d_data[pieceId];
+	const VectorView<SrcSampleInfo>& pieceInfo = pieceInfoList.d_data[pieceId];
 	unsigned paramId = job.jobOfPiece;
 
 	SrcSampleInfo& posInfo = pieceInfo.d_data[paramId];
@@ -212,7 +188,7 @@ CUDALevel2Vector<unsigned> cuMaxVoicedLists, CUDAVector<Job> jobMap, unsigned Bu
 	float *s_buf1 = (float*)sbuf; // capture
 	float *s_buf2 = (float*)sbuf + u_srchalfWidth * 2; // Amplitude spectrum
 
-	const CUDASrcBuf& srcBuf = cuSrcBufs.d_data[pieceId];
+	const VectorView<float>& srcBuf = cuSrcBufs.d_data[pieceId];
 
 	d_captureFromBuf(srcBuf.count, srcBuf.d_data, posInfo.srcPos, srcHalfWinWidth, u_srchalfWidth, s_buf1);
 	d_CreateAmpSpectrumFromWindow(srcHalfWinWidth, u_srchalfWidth, s_buf1, s_buf2, uSpecLen);
@@ -243,9 +219,9 @@ CUDALevel2Vector<unsigned> cuMaxVoicedLists, CUDAVector<Job> jobMap, unsigned Bu
 	}
 }
 
-void h_AnalyzeInput(CUDASrcBufList cuSrcBufs, CUDASrcPieceInfoList pieceInfoList, unsigned halfWinLen,
-	unsigned specLen, CUDALevel2Vector<float> cuHarmWindows, CUDALevel2Vector<float> cuNoiseSpecs,
-	CUDALevel2Vector<unsigned> cuMaxVoicedLists, CUDAVector<Job> jobMap, unsigned BufSize)
+void h_AnalyzeInput(VectorView<VectorView<float>> cuSrcBufs, VectorView<VectorView<SrcSampleInfo>> pieceInfoList, unsigned halfWinLen,
+	unsigned specLen, VectorView<VectorView<float>> cuHarmWindows, VectorView<VectorView<float>> cuNoiseSpecs,
+	VectorView<VectorView<unsigned>> cuMaxVoicedLists, VectorView<Job> jobMap, unsigned BufSize)
 {
 	unsigned groupSize = calcGroupSize(BufSize / 4);
 	unsigned sharedBufSize = (unsigned)sizeof(float)* BufSize;
@@ -254,10 +230,10 @@ void h_AnalyzeInput(CUDASrcBufList cuSrcBufs, CUDASrcPieceInfoList pieceInfoList
 }
 
 __global__
-void g_Synthesis(CUDASrcPieceInfoList cuSrcPieceInfos, unsigned halfWinLen, unsigned specLen, 
-CUDALevel2Vector<float> cuHarmWindows, CUDALevel2Vector<float> cuNoiseSpecs,
-CUDAVector<DstPieceInfo> cuDstPieceInfos, CUDAVector<CUDATempBuffer> cuTmpBufs1, CUDAVector<CUDATempBuffer> cuTmpBufs2,
-CUDAVector<float> cuRandPhase, CUDAVector<SynthJobInfo> cuSynthJobs)
+void g_Synthesis(VectorView<VectorView<SrcSampleInfo>> cuSrcPieceInfos, unsigned halfWinLen, unsigned specLen,
+VectorView<VectorView<float>> cuHarmWindows, VectorView<VectorView<float>> cuNoiseSpecs,
+VectorView<DstPieceInfo> cuDstPieceInfos, VectorView<CUDATempBuffer> cuTmpBufs1, VectorView<CUDATempBuffer> cuTmpBufs2,
+VectorView<float> cuRandPhase, VectorView<SynthJobInfo> cuSynthJobs)
 {
 	unsigned numWorker = blockDim.x;
 	unsigned workerId = threadIdx.x;
@@ -267,8 +243,8 @@ CUDAVector<float> cuRandPhase, CUDAVector<SynthJobInfo> cuSynthJobs)
 	unsigned srcPieceId0 = job.srcPieceId0;
 	unsigned srcPieceId1 = job.srcPieceId1;
 	unsigned dstParamId = job.jobOfPiece;
-	const CUDASrcPieceInfo& srcPieceInfo0 = cuSrcPieceInfos.d_data[srcPieceId0];
-	const CUDASrcPieceInfo& srcPieceInfo1 = cuSrcPieceInfos.d_data[srcPieceId1];
+	const VectorView<SrcSampleInfo>& srcPieceInfo0 = cuSrcPieceInfos.d_data[srcPieceId0];
+	const VectorView<SrcSampleInfo>& srcPieceInfo1 = cuSrcPieceInfos.d_data[srcPieceId1];
 	const DstPieceInfo& dstPieceInfo = cuDstPieceInfos.d_data[dstPieceId];
 
 	CUDATempBuffer& cuTmpBuf = dstParamId % 2 == 0 ? cuTmpBufs1.d_data[dstPieceId] : cuTmpBufs2.d_data[dstPieceId];
@@ -387,10 +363,10 @@ CUDAVector<float> cuRandPhase, CUDAVector<SynthJobInfo> cuSynthJobs)
 }
 
 
-void h_Synthesis(CUDASrcPieceInfoList cuSrcPieceInfos, unsigned halfWinLen, unsigned specLen,
-	CUDALevel2Vector<float> cuHarmWindows, CUDALevel2Vector<float> cuNoiseSpecs,
-	CUDAVector<DstPieceInfo> cuDstPieceInfos, CUDAVector<CUDATempBuffer> cuTmpBufs1, CUDAVector<CUDATempBuffer> cuTmpBufs2,
-	CUDAVector<float> cuRandPhase, CUDAVector<SynthJobInfo> cuSynthJobs, unsigned BufSize)
+void h_Synthesis(VectorView<VectorView<SrcSampleInfo>> cuSrcPieceInfos, unsigned halfWinLen, unsigned specLen,
+	VectorView<VectorView<float>> cuHarmWindows, VectorView<VectorView<float>> cuNoiseSpecs,
+	VectorView<DstPieceInfo> cuDstPieceInfos, VectorView<CUDATempBuffer> cuTmpBufs1, VectorView<CUDATempBuffer> cuTmpBufs2,
+	VectorView<float> cuRandPhase, VectorView<SynthJobInfo> cuSynthJobs, unsigned BufSize)
 {
 	unsigned groupSize = calcGroupSize(BufSize / 4);
 	unsigned sharedBufSize = (unsigned)sizeof(float)* BufSize;

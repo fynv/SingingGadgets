@@ -61,6 +61,7 @@ HNM.cu
 )
 
 set(HEADERS ${HEADERS}
+DVVector.hpp
 SentenceGeneratorCUDA.h
 helper_math.h
 VoiceUtil.cuh
